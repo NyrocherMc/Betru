@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1220">
+<meta name="description" content="Betru - Calculateur de stratégie de mises">
+<title>Betru - Calculateur de stratégie de mises</title>
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--ink:#111827;--muted:#64748b;--line:#dbe3ee;--accent:#111827;--accent2:#2563eb;--good:#0f766e;--soft:#eef4ff;--radius:18px}
+*{box-sizing:border-box}html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}body{min-height:100vh}.app{max-width:760px;margin:0 auto;padding:16px 14px 30px}.header{background:linear-gradient(135deg,#111827,#26344d);color:#fff;border-radius:22px;padding:20px 18px;margin-bottom:12px;box-shadow:0 8px 28px #0b12201c}.brand{font-size:28px;font-weight:800;letter-spacing:-.6px}.subtitle{font-size:13px;color:#cbd5e1;margin-top:4px}.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:17px}.tab{border:1px solid #ffffff2b;background:#ffffff10;color:#dbeafe;border-radius:12px;padding:11px 8px;font-size:12px;font-weight:700;cursor:pointer}.tab.active{background:#fff;color:#111827;border-color:#fff}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-top:12px;box-shadow:0 5px 18px #0f172a0a}.section-title{font-size:14px;font-weight:800;letter-spacing:.25px;margin-bottom:12px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field label{display:block;font-size:11px;color:var(--muted);font-weight:700;margin:0 0 5px}.input{width:100%;height:44px;border:1px solid var(--line);border-radius:12px;background:#fff;padding:0 12px;font-size:16px;color:var(--ink);outline:none}.input:focus{border-color:#93c5fd;box-shadow:0 0 0 3px #2563eb12}.capital-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.capital-box{background:#f8fafc;border:1px solid var(--line);border-radius:14px;padding:12px}.capital-box .big{font-size:22px;font-weight:800}.capital-box .small{font-size:11px;color:var(--muted);margin-top:2px}.odds-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.odd label{display:block;font-size:10px;color:var(--muted);font-weight:800;margin-bottom:4px}.odd .input{padding:0 8px;text-align:center}.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}.btn{height:44px;border:0;border-radius:12px;font-weight:800;font-size:13px;cursor:pointer}.btn.primary{background:var(--accent);color:#fff}.btn.secondary{background:#e9eef6;color:#172033}.btn:active{transform:translateY(1px)}.leverage{display:flex;align-items:center;justify-content:space-between;gap:12px}.badge{min-width:108px;text-align:center;background:#ecfdf5;border:1px solid #bbf7d0;color:#047857;border-radius:12px;padding:10px 12px;font-size:20px;font-weight:900}.hint{font-size:11px;color:var(--muted);line-height:1.45}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:13px}.table{width:100%;border-collapse:collapse;min-width:620px;font-size:12px}.table th{background:#f8fafc;color:#475569;font-size:10px;text-transform:uppercase;letter-spacing:.3px}.table th,.table td{padding:10px 9px;border-bottom:1px solid var(--line);text-align:center;white-space:nowrap}.table tr:last-child td{border-bottom:0}.table td:first-child,.table th:first-child{font-weight:900}.ok{color:var(--good);font-weight:800}.empty{padding:22px;text-align:center;color:var(--muted);font-size:13px}.rules{display:grid;gap:8px}.rule{background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:11px 12px}.rule b{display:block;font-size:12px;margin-bottom:4px}.formula{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:#334155;word-break:break-word}.status{font-size:11px;color:var(--muted);margin-top:10px;min-height:16px}.footer{text-align:center;color:#94a3b8;font-size:11px;padding:18px 4px 4px}.hidden{display:none!important}@media(max-width:520px){.app{padding:11px 10px 24px}.header{padding:17px 14px;border-radius:18px}.brand{font-size:25px}.odds-grid{grid-template-columns:1fr 1fr}.grid,.capital-row,.actions{grid-template-columns:1fr}.card{padding:14px}.badge{min-width:96px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="header">
+  <div class="brand">Betru</div>
+  <div class="subtitle">Calculateur de stratégie de mises</div>
+  <div class="tabs">
+    <button class="tab active" id="tab1">V1 · R1 · V2 · R2</button>
+    <button class="tab" id="tab2">X · 12 · R1 · R2</button>
+  </div>
+</header>
+
+<section class="card">
+  <div class="section-title">CAPITAL</div>
+  <div class="capital-row">
+    <div class="field"><label for="capital">Capital de référence</label><input id="capital" class="input" type="number" min="2" step="1" value="100" inputmode="numeric"></div>
+    <div class="capital-box"><div class="big" id="target">105.00</div><div class="small">Objectif à +5%</div></div>
+  </div>
+</section>
+
+<section class="card">
+  <div class="section-title">CRITÈRES &amp; COTES</div>
+  <div class="odds-grid">
+    <div class="odd"><label id="l1">V1</label><input id="o1" class="input" type="number" min="1.01" step="0.01" value="1.92" inputmode="decimal"></div>
+    <div class="odd"><label id="l2">R1</label><input id="o2" class="input" type="number" min="1.01" step="0.01" value="1.35" inputmode="decimal"></div>
+    <div class="odd"><label id="l3">V2</label><input id="o3" class="input" type="number" min="1.01" step="0.01" value="4.42" inputmode="decimal"></div>
+    <div class="odd"><label id="l4">R2</label><input id="o4" class="input" type="number" min="1.01" step="0.01" value="2.95" inputmode="decimal"></div>
+  </div>
+  <div class="actions">
+    <button class="btn primary" id="findBtn">Trouver les solutions</button>
+    <button class="btn secondary" id="resetBtn">Réinitialiser</button>
+  </div>
+  <div class="status" id="status"></div>
+</section>
+
+<section class="card">
+  <div class="leverage">
+    <div><div class="section-title" style="margin-bottom:4px">LEVERAGE</div><div class="hint">Pourcentage maximal atteignable avec le capital et les cotes actuels, en imposant a, b, c, d &gt; 0 et a+b+c+d ≤ capital.</div></div>
+    <div class="badge" id="leverage">15.41%</div>
+  </div>
+</section>
+
+<section class="card">
+  <div class="section-title">LIMITES</div>
+  <div class="hint" style="margin-bottom:10px">Toutes les combinaisons qui atteignent le leverage maximal. Les trois dernières colonnes vérifient les règles de base.</div>
+  <div class="table-wrap">
+    <table class="table"><thead><tr><th>a</th><th>b</th><th>c</th><th>d</th><th id="h1">V1a + R1b</th><th id="h2">R1b + R2d</th><th id="h3">V2c + R2d</th></tr></thead><tbody id="limitsBody"></tbody></table>
+  </div>
+</section>
+
+<section class="card">
+  <div class="section-title">RÈGLES LIMITES</div>
+  <div class="rules">
+    <div class="rule"><b>Objectif limite</b><div class="formula" id="rule0">T = Capital × (1 + Leverage)</div></div>
+    <div class="rule"><b>Règle 1</b><div class="formula" id="rule1">V1 × a + R1 × b ≥ T</div></div>
+    <div class="rule"><b>Règle 2</b><div class="formula" id="rule2">R1 × b + R2 × d ≥ T</div></div>
+    <div class="rule"><b>Règle 3</b><div class="formula" id="rule3">V2 × c + R2 × d ≥ T</div></div>
+    <div class="rule"><b>Contrainte de capital</b><div class="formula">a,b,c,d ∈ ℕ* ; a + b + c + d ≤ Capital</div></div>
+  </div>
+</section>
+
+<footer class="footer">Betru - moteur de recherche - aide à la décision</footer>
+</div>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const defaults={capital:100,odds:[1.92,1.35,4.42,2.95]};
+let model=1, timer=null;
+function num(id){return Number(String($(id).value).replace(',','.'))}
+function fmt(x){return Number(x).toFixed(2)}
+function setStatus(t){$('status').textContent=t||''}
+function values(){
+ const C=Math.floor(num('capital')), o=[$('o1').value,$('o2').value,$('o3').value,$('o4').value].map(v=>Number(String(v).replace(',','.')));
+ return {C,o};
+}
+function maxSolve(C,V1,R1,V2,R2){
+ if(!Number.isFinite(C)||C<4||[V1,R1,V2,R2].some(x=>!Number.isFinite(x)||x<=0)) return {best:null,sols:[]};
+ let best=-Infinity, sols=[];
+ // For fixed b,d, the best a/c split is at the crossing of the two variable constraints.
+ // This reduces the search to O(C²), instead of enumerating a,b,c,d.
+ for(let b=1;b<=C-3;b++){
+   for(let d=1;d<=C-b-2;d++){
+     const S=C-b-d, B=R1*b+R2*d;
+     const x=(V2*S+R2*d-R1*b)/(V1+V2);
+     const cand=[];
+     for(const z of [Math.floor(x),Math.ceil(x),1,S-1]){
+       const a=Math.max(1,Math.min(S-1,z));
+       if(!cand.includes(a)) cand.push(a);
+     }
+     let local=-Infinity, localSol=[];
+     for(const a of cand){
+       const c=S-a;
+       const A=V1*a+R1*b, D=V2*c+R2*d, T=Math.min(A,B,D);
+       if(T>local+1e-9){local=T;localSol=[[a,b,c,d,A,B,D]]}
+       else if(Math.abs(T-local)<1e-9)localSol.push([a,b,c,d,A,B,D]);
+     }
+     if(local>best+1e-9){best=local;sols=localSol}
+     else if(Math.abs(local-best)<1e-9)sols.push(...localSol)
+   }
+ }
+ // remove duplicates caused by candidate clamping
+ const map=new Map(); sols.forEach(s=>map.set(s.slice(0,4).join(','),s));
+ sols=[...map.values()].sort((p,q)=>p[0]-q[0]||p[1]-q[1]||p[2]-q[2]||p[3]-q[3]);
+ return {best,sols};
+}
+function render(result,C,o){
+ const [V1,R1,V2,R2]=o;
+ if(result.best==null){$('leverage').textContent='—';$('target').textContent='—';$('limitsBody').innerHTML='<tr><td colspan="7" class="empty">Capital ou cotes invalides.</td></tr>';return;}
+ const lev=(result.best/C-1)*100;
+ $('leverage').textContent=fmt(lev)+'%';$('target').textContent=fmt(C*(1+0.05));
+ $('limitsBody').innerHTML=result.sols.length?result.sols.map(s=>`<tr><td>${s[0]}</td><td>${s[1]}</td><td>${s[2]}</td><td>${s[3]}</td><td class="ok">${fmt(s[4])}</td><td class="ok">${fmt(s[5])}</td><td class="ok">${fmt(s[6])}</td></tr>`).join(''):'<tr><td colspan="7" class="empty">Aucune combinaison admissible.</td></tr>';
+ $('rule0').textContent=`T = ${fmt(C)} × (1 + ${fmt(lev)}%) = ${fmt(result.best)}`;
+ $('rule1').textContent=`${fmt(V1)} × a + ${fmt(R1)} × b ≥ ${fmt(result.best)}`;
+ $('rule2').textContent=`${fmt(R1)} × b + ${fmt(R2)} × d ≥ ${fmt(result.best)}`;
+ $('rule3').textContent=`${fmt(V2)} × c + ${fmt(R2)} × d ≥ ${fmt(result.best)}`;
+ $('h1').textContent=`${fmt(V1)}a + ${fmt(R1)}b`; $('h2').textContent=`${fmt(R1)}b + ${fmt(R2)}d`; $('h3').textContent=`${fmt(V2)}c + ${fmt(R2)}d`;
+ setStatus(`${result.sols.length} solution${result.sols.length>1?'s':''} optimale${result.sols.length>1?'s':''} trouvée${result.sols.length>1?'s':''}.`);
+}
+function calculate(){
+ const {C,o}=values();
+ if(!Number.isInteger(C)||C<4){setStatus('Le capital doit être un entier supérieur ou égal à 4.');return}
+ if(o.some(x=>!Number.isFinite(x)||x<=0)){setStatus('Veuillez saisir quatre cotes valides.');return}
+ setStatus('Calcul en cours…');
+ // Let the browser paint before the O(C²) search on larger capitals.
+ setTimeout(()=>render(maxSolve(C,...o),C,o),20);
+}
+function schedule(){clearTimeout(timer);timer=setTimeout(calculate,280)}
+function switchModel(m){
+ model=m;$('tab1').classList.toggle('active',m===1);$('tab2').classList.toggle('active',m===2);
+ if(m===1){$('l1').textContent='V1';$('l2').textContent='R1';$('l3').textContent='V2';$('l4').textContent='R2';['o1','o2','o3','o4'].forEach((id,i)=>$(id).value=defaults.odds[i]);}
+ else { $('l1').textContent='X';$('l2').textContent='12';$('l3').textContent='R1';$('l4').textContent='R2'; ['o1','o2','o3','o4'].forEach((id,i)=>$(id).value=[3.09,1.35,1.35,2.95][i]); }
+ calculate();
+}
+$('tab1').onclick=()=>switchModel(1);$('tab2').onclick=()=>switchModel(2);$('findBtn').onclick=calculate;
+['capital','o1','o2','o3','o4'].forEach(id=>$(id).addEventListener('input',schedule));
+$('resetBtn').onclick=()=>{ $('capital').value=0;['o1','o2','o3','o4'].forEach(id=>$(id).value=0);$('leverage').textContent='—';$('target').textContent='0.00';$('limitsBody').innerHTML='<tr><td colspan="7" class="empty">Saisissez un capital et les cotes pour lancer le calcul.</td></tr>';setStatus('Réinitialisé.');};
+calculate();
+if('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+})();
+</script>
+</body>
+</html>
