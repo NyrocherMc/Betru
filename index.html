@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#03060b">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./logo.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="./logo.svg">
+<meta name="description" content="Betru - Calculateur de stratégie de mises">
+<title>Betru - Calculateur de stratégie de mises</title>
+<style>
+:root{
+  --bg:#03060b;--bg2:#07101a;--card:#09121e;--card2:#0c1725;--ink:#f4f7fb;--muted:#8391a5;
+  --line:#1a2a3d;--gold:#f5c451;--gold2:#ffdf7a;--green:#21e6a3;--cyan:#58d8ff;--blue:#3878ff;
+  --danger:#ff6b6b;--radius:18px;--shadow:0 16px 50px rgba(0,0,0,.42)
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+body{min-height:100vh;overflow-x:hidden;background:
+ radial-gradient(circle at 8% 8%,rgba(56,120,255,.13),transparent 27%),
+ radial-gradient(circle at 92% 18%,rgba(33,230,163,.09),transparent 25%),
+ radial-gradient(circle at 50% 100%,rgba(245,196,81,.07),transparent 34%),#03060b}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.16;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(to bottom,black,transparent 78%)}
+.app{max-width:760px;margin:0 auto;padding:14px 12px 34px;position:relative;z-index:1}
+.header{position:relative;overflow:hidden;background:linear-gradient(135deg,#07101b 0%,#0a1728 58%,#101b28 100%);color:#fff;border:1px solid #20344b;border-radius:22px;padding:19px 17px 16px;margin-bottom:12px;box-shadow:var(--shadow)}
+.header:before{content:"";position:absolute;inset:-35%;background:radial-gradient(circle,rgba(245,196,81,.16),transparent 30%),radial-gradient(circle at 72% 35%,rgba(33,230,163,.12),transparent 25%);animation:aurora 9s ease-in-out infinite alternate;pointer-events:none}
+.header:after{content:"";position:absolute;right:-44px;top:-70px;width:220px;height:220px;border:1px solid rgba(33,230,163,.22);border-radius:50%;box-shadow:0 0 0 28px rgba(33,230,163,.035),0 0 0 56px rgba(33,230,163,.02);animation:orbit 18s linear infinite;pointer-events:none}
+.header>*{position:relative;z-index:2}.brand-row{display:flex;align-items:center;gap:10px}.brand-mark{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(135deg,var(--green),#1aa8ff);color:#03100d;font-weight:950;box-shadow:0 0 24px rgba(33,230,163,.22)}
+.brand{font-size:28px;font-weight:900;letter-spacing:-.7px;background:linear-gradient(90deg,#fff,#f5c451 55%,#21e6a3);-webkit-background-clip:text;background-clip:text;color:transparent}.subtitle{font-size:12px;color:#9eacbf;margin-top:2px}.micro-tag{margin-left:auto;font-size:9px;font-weight:800;letter-spacing:.6px;color:#b8c5d5;border:1px solid #2a3d52;border-radius:999px;padding:6px 8px;background:#ffffff05}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:17px}.tab{border:1px solid #263b52;background:#0a1625;color:#9eabc0;border-radius:12px;padding:11px 8px;font-size:12px;font-weight:800;cursor:pointer;transition:.22s ease}.tab:hover{border-color:#42617f}.tab.active{background:linear-gradient(135deg,#14253a,#102033);color:#fff;border-color:#2f5b7b;box-shadow:inset 0 0 0 1px rgba(88,216,255,.06),0 5px 20px rgba(0,0,0,.18)}
+.card{position:relative;background:linear-gradient(145deg,rgba(10,19,31,.96),rgba(6,12,21,.96));border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-top:12px;box-shadow:0 10px 32px rgba(0,0,0,.28);overflow:hidden}.card:before{content:"";position:absolute;left:0;top:0;width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--gold),var(--green),transparent);opacity:.35}.card:hover{border-color:#243b54}
+.section-title{font-size:13px;font-weight:900;letter-spacing:.7px;margin-bottom:12px;background:linear-gradient(90deg,#f5c451,#7fe8c0 58%,#58d8ff);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 0 18px rgba(245,196,81,.05)}.field label,.odd label{display:block;font-size:10px;color:#7f8fa4;font-weight:800;margin:0 0 5px;letter-spacing:.15px}.input{width:100%;height:44px;border:1px solid #20334a;border-radius:12px;background:#06101b;padding:0 12px;font-size:16px;color:#f5f8fb;outline:none;transition:.2s}.input::placeholder{color:#58677a}.input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(88,216,255,.08),0 0 20px rgba(88,216,255,.05)}
+.capital-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.capital-box{background:linear-gradient(145deg,#0b1725,#09121e);border:1px solid #1e3147;border-radius:14px;padding:12px}.capital-box .big{font-size:22px;font-weight:850;color:var(--gold2);text-shadow:0 0 18px rgba(245,196,81,.12)}.capital-box .small{font-size:10px;color:#77879b;margin-top:2px}
+.odds-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.odd .input{text-align:center;color:var(--gold2);font-weight:800}.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}.btn{height:44px;border:1px solid transparent;border-radius:12px;font-weight:850;font-size:13px;cursor:pointer;transition:.2s ease;position:relative;overflow:hidden}.btn.primary{background:linear-gradient(135deg,#d9a92f,#f5c451 48%,#ffe18a);color:#10100a;box-shadow:0 7px 24px rgba(245,196,81,.14)}.btn.primary:after{content:"";position:absolute;top:-80%;left:-30%;width:25%;height:260%;background:rgba(255,255,255,.45);transform:rotate(20deg);animation:shine 4.5s ease-in-out infinite}.btn.secondary{background:#0c1827;color:#bdc9d8;border-color:#22374d}.btn:active{transform:translateY(1px) scale(.995)}
+.status{font-size:10px;color:#738398;margin-top:10px;min-height:16px}.status:not(:empty){color:#a3b0c0}
+.leverage{display:flex;align-items:center;justify-content:space-between;gap:12px}.hint{font-size:10px;color:#75869a;line-height:1.5}.badge{min-width:112px;text-align:center;background:linear-gradient(135deg,rgba(245,196,81,.12),rgba(33,230,163,.11));border:1px solid rgba(33,230,163,.3);color:var(--green);border-radius:13px;padding:10px 12px;font-size:20px;font-weight:950;text-shadow:0 0 18px rgba(33,230,163,.16);box-shadow:0 0 26px rgba(33,230,163,.05);animation:pulseGlow 3s ease-in-out infinite}
+.table-wrap{overflow:auto;border:1px solid #1d3045;border-radius:13px;background:#06101a}.table{width:100%;border-collapse:collapse;min-width:620px;font-size:12px}.table th{background:#0b1725;color:#7e90a7;font-size:9px;text-transform:uppercase;letter-spacing:.35px}.table th,.table td{padding:10px 9px;border-bottom:1px solid #17283a;text-align:center;white-space:nowrap}.table tr:last-child td{border-bottom:0}.table td:first-child,.table th:first-child{font-weight:900}.table tbody tr{transition:.2s}.table tbody tr:hover{background:#0b1a2a}.ok{color:var(--green);font-weight:850;text-shadow:0 0 14px rgba(33,230,163,.1)}.empty{padding:22px;text-align:center;color:#6f7f93;font-size:12px}
+.rules{display:grid;gap:8px}.rule{background:linear-gradient(135deg,#091523,#07101a);border:1px solid #1b2c40;border-radius:12px;padding:11px 12px;transition:.2s}.rule:hover{border-color:#2b435d;transform:translateX(1px)}.rule b{display:block;font-size:11px;color:#d9e3ee;margin-bottom:4px}.formula{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;color:#8da0b5;word-break:break-word}.footer{text-align:center;color:#4e6074;font-size:10px;padding:18px 4px 4px}
+.pitch{position:absolute;inset:0;pointer-events:none;opacity:.23;background:radial-gradient(ellipse at 82% 50%,transparent 0 17%,rgba(88,216,255,.14) 17.2%,transparent 17.8%),radial-gradient(ellipse at 82% 50%,transparent 0 31%,rgba(33,230,163,.07) 31.2%,transparent 31.7%),linear-gradient(90deg,transparent 49.7%,rgba(88,216,255,.10) 50%,transparent 50.3%),linear-gradient(90deg,transparent 81%,rgba(88,216,255,.08) 81.2%,transparent 81.5%);mask-image:linear-gradient(to right,transparent 0,black 12%,black 92%,transparent 100%);animation:pitchPulse 7s ease-in-out infinite alternate}
+.football{position:fixed;right:7%;top:22%;font-size:26px;filter:drop-shadow(0 0 12px rgba(255,255,255,.18));opacity:.11;pointer-events:none;animation:floatBall 12s ease-in-out infinite;z-index:0}.coin{position:fixed;width:9px;height:9px;border:1px solid rgba(245,196,81,.55);border-radius:50%;opacity:.22;pointer-events:none;z-index:0}.coin.c1{left:7%;top:38%;animation:coinFloat 8s ease-in-out infinite}.coin.c2{right:12%;top:62%;animation:coinFloat 10s 1.4s ease-in-out infinite}.coin.c3{left:18%;top:78%;animation:coinFloat 11s 2.2s ease-in-out infinite}
+@keyframes pitchPulse{from{transform:scale(1);opacity:.15}to{transform:scale(1.04);opacity:.28}}@keyframes aurora{from{transform:translate3d(-2%,0,0) scale(1)}to{transform:translate3d(3%,2%,0) scale(1.08)}}@keyframes orbit{to{transform:rotate(360deg)}}@keyframes shine{0%,58%{left:-35%;opacity:0}64%{opacity:1}82%,100%{left:125%;opacity:0}}@keyframes pulseGlow{0%,100%{box-shadow:0 0 18px rgba(33,230,163,.04)}50%{box-shadow:0 0 30px rgba(33,230,163,.11)}}@keyframes floatBall{0%,100%{transform:translate3d(0,0,0) rotate(-8deg)}50%{transform:translate3d(-30px,25px,0) rotate(16deg)}}@keyframes coinFloat{0%,100%{transform:translateY(0) rotate(0);opacity:.12}50%{transform:translateY(-24px) rotate(180deg);opacity:.32}}
+
+.splash{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:radial-gradient(circle at 50% 42%,rgba(33,230,163,.12),transparent 24%),radial-gradient(circle at 50% 50%,rgba(245,196,81,.10),transparent 38%),#020407;transition:opacity .65s ease,visibility .65s ease}.splash.hide{opacity:0;visibility:hidden;pointer-events:none}.splash-bg{position:absolute;inset:0;overflow:hidden}.splash-bg:before{content:"";position:absolute;width:70vmax;height:70vmax;border:1px solid rgba(33,230,163,.12);border-radius:50%;left:50%;top:50%;transform:translate(-50%,-50%);box-shadow:0 0 0 8vmax rgba(33,230,163,.025),0 0 0 16vmax rgba(245,196,81,.018);animation:splashOrbit 14s linear infinite}.splash-bg:after{content:"⚽";position:absolute;font-size:32px;opacity:.12;right:12%;top:20%;animation:floatBall 7s ease-in-out infinite}.splash-content{position:relative;text-align:center;width:min(86vw,390px);padding:28px}.splash-logo{width:154px;height:154px;margin:0 auto 18px;filter:drop-shadow(0 0 26px rgba(245,196,81,.20)) drop-shadow(0 0 34px rgba(33,230,163,.12));animation:logoEnter 1.15s cubic-bezier(.2,.8,.2,1) both}.splash-name{font-size:44px;font-weight:950;letter-spacing:-1.8px;background:linear-gradient(90deg,#fff,#f5c451 52%,#21e6a3);-webkit-background-clip:text;background-clip:text;color:transparent}.splash-sub{margin-top:4px;color:#94a3b8;font-size:11px;letter-spacing:2.2px;text-transform:uppercase}.splash-features{display:flex;justify-content:center;gap:22px;margin-top:30px;color:#dbe6f2;font-size:10px}.splash-features span{display:grid;gap:5px;justify-items:center}.splash-features b{font-size:20px;color:#f5c451}.splash-progress{height:4px;border-radius:99px;background:#101a25;border:1px solid #263649;margin:28px auto 0;overflow:hidden;max-width:260px}.splash-progress i{display:block;width:0;height:100%;background:linear-gradient(90deg,#d9a92f,#f5c451,#21e6a3);box-shadow:0 0 14px rgba(33,230,163,.45);animation:loadSplash 1.8s ease-out forwards}.splash-status{font-size:9px;color:#66778c;margin-top:8px;letter-spacing:.8px}@keyframes splashOrbit{to{transform:translate(-50%,-50%) rotate(360deg)}}@keyframes logoEnter{0%{opacity:0;transform:translateY(25px) scale(.72) rotate(-8deg)}65%{opacity:1;transform:translateY(-4px) scale(1.04) rotate(1deg)}100%{transform:translateY(0) scale(1) rotate(0)}}@keyframes loadSplash{0%{width:0}100%{width:100%}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}@media(max-width:520px){.app{padding:10px 9px 24px}.header{padding:16px 13px;border-radius:18px}.brand{font-size:25px}.brand-mark{width:33px;height:33px}.micro-tag{display:none}.odds-grid{grid-template-columns:1fr 1fr}.capital-row,.actions{grid-template-columns:1fr}.card{padding:14px}.badge{min-width:96px}.leverage{align-items:flex-start}.football{right:3%;top:28%;font-size:21px}}
+</style>
+</head>
+<body>
+<div class="splash" id="splash"><div class="splash-bg"></div><div class="splash-content"><img class="splash-logo" src="./logo.svg" alt="Logo Betru"><div class="splash-name">Betru</div><div class="splash-sub">Calculateur de stratégie de mises</div><div class="splash-features"><span><b>⚽</b>FOOTBALL</span><span><b>♛</b>STRATÉGIE</span><span><b>↗</b>PERFORMANCE</span></div><div class="splash-progress"><i></i></div><div class="splash-status">INITIALISATION DU MOTEUR…</div></div></div>
+<div class="football">⚽</div><div class="coin c1"></div><div class="coin c2"></div><div class="coin c3"></div>
+<div class="app">
+<header class="header">
+  <div class="pitch"></div>
+  <div class="brand-row"><div class="brand-mark"><img src="./logo.svg" alt="Betru" style="width:100%;height:100%;display:block"></div><div><div class="brand">Betru</div><div class="subtitle">Calculateur de stratégie de mises</div></div><div class="micro-tag">SMART BET ENGINE</div></div>
+  <div class="tabs">
+    <button class="tab active" id="tab1">V1 · R1 · V2 · R2</button>
+    <button class="tab" id="tab2">X · 12 · R1 · R2</button>
+  </div>
+</header>
+
+<section class="card">
+  <div class="section-title">PARAMÈTRES DU MATCH</div>
+  <div class="capital-row">
+    <div class="field"><label for="capital">Capital de départ</label><input id="capital" class="input" type="number" min="2" step="1" value="100" inputmode="numeric"></div>
+    <div class="capital-box"><div class="big" id="target">105.00</div><div class="small">Objectif à +5%</div></div>
+  </div>
+</section>
+
+<section class="card">
+  <div class="section-title">CRITÈRES &amp; COTES</div>
+  <div class="odds-grid">
+    <div class="odd"><label id="l1">V1</label><input id="o1" class="input" type="number" min="1.01" step="0.01" value="1.92" inputmode="decimal"></div>
+    <div class="odd"><label id="l2">R1</label><input id="o2" class="input" type="number" min="1.01" step="0.01" value="1.35" inputmode="decimal"></div>
+    <div class="odd"><label id="l3">V2</label><input id="o3" class="input" type="number" min="1.01" step="0.01" value="4.42" inputmode="decimal"></div>
+    <div class="odd"><label id="l4">R2</label><input id="o4" class="input" type="number" min="1.01" step="0.01" value="2.95" inputmode="decimal"></div>
+  </div>
+  <div class="actions">
+    <button class="btn primary" id="findBtn">Trouver les solutions</button>
+    <button class="btn secondary" id="resetBtn">Réinitialiser</button>
+  </div>
+  <div class="status" id="status"></div>
+</section>
+
+<section class="card">
+  <div class="leverage">
+    <div><div class="section-title" style="margin-bottom:4px">LEVERAGE</div><div class="hint">Pourcentage maximal atteignable avec le capital et les cotes actuels, en imposant a, b, c, d &gt; 0 et a+b+c+d ≤ capital.</div></div>
+    <div class="badge" id="leverage">15.41%</div>
+  </div>
+</section>
+
+<section class="card">
+  <div class="section-title">LIMITES</div>
+  <div class="hint" style="margin-bottom:10px">Toutes les combinaisons qui atteignent le leverage maximal. Les trois dernières colonnes vérifient les règles de base.</div>
+  <div class="table-wrap">
+    <table class="table"><thead><tr><th>a</th><th>b</th><th>c</th><th>d</th><th id="h1">V1a + R1b</th><th id="h2">R1b + R2d</th><th id="h3">V2c + R2d</th></tr></thead><tbody id="limitsBody"></tbody></table>
+  </div>
+</section>
+
+<section class="card">
+  <div class="section-title">RÈGLES LIMITES</div>
+  <div class="rules">
+    <div class="rule"><b>Objectif limite</b><div class="formula" id="rule0">T = Capital × (1 + Leverage)</div></div>
+    <div class="rule"><b>Règle 1</b><div class="formula" id="rule1">V1 × a + R1 × b ≥ T</div></div>
+    <div class="rule"><b>Règle 2</b><div class="formula" id="rule2">R1 × b + R2 × d ≥ T</div></div>
+    <div class="rule"><b>Règle 3</b><div class="formula" id="rule3">V2 × c + R2 × d ≥ T</div></div>
+    <div class="rule"><b>Contrainte de capital</b><div class="formula">a,b,c,d ∈ ℕ* ; a + b + c + d ≤ Capital</div></div>
+  </div>
+</section>
+
+<footer class="footer">Betru - moteur de recherche - aide à la décision</footer>
+</div>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const defaults={capital:100,odds:[1.92,1.35,4.42,2.95]};
+let model=1, timer=null;
+function num(id){return Number(String($(id).value).replace(',','.'))}
+function fmt(x){return Number(x).toFixed(2)}
+function setStatus(t){$('status').textContent=t||''}
+function values(){
+ const C=Math.floor(num('capital')), o=[$('o1').value,$('o2').value,$('o3').value,$('o4').value].map(v=>Number(String(v).replace(',','.')));
+ return {C,o};
+}
+function maxSolve(C,V1,R1,V2,R2){
+ if(!Number.isFinite(C)||C<4||[V1,R1,V2,R2].some(x=>!Number.isFinite(x)||x<=0)) return {best:null,sols:[]};
+ let best=-Infinity, sols=[];
+ // For fixed b,d, the best a/c split is at the crossing of the two variable constraints.
+ // This reduces the search to O(C²), instead of enumerating a,b,c,d.
+ for(let b=1;b<=C-3;b++){
+   for(let d=1;d<=C-b-2;d++){
+     const S=C-b-d, B=R1*b+R2*d;
+     const x=(V2*S+R2*d-R1*b)/(V1+V2);
+     const cand=[];
+     for(const z of [Math.floor(x),Math.ceil(x),1,S-1]){
+       const a=Math.max(1,Math.min(S-1,z));
+       if(!cand.includes(a)) cand.push(a);
+     }
+     let local=-Infinity, localSol=[];
+     for(const a of cand){
+       const c=S-a;
+       const A=V1*a+R1*b, D=V2*c+R2*d, T=Math.min(A,B,D);
+       if(T>local+1e-9){local=T;localSol=[[a,b,c,d,A,B,D]]}
+       else if(Math.abs(T-local)<1e-9)localSol.push([a,b,c,d,A,B,D]);
+     }
+     if(local>best+1e-9){best=local;sols=localSol}
+     else if(Math.abs(local-best)<1e-9)sols.push(...localSol)
+   }
+ }
+ // remove duplicates caused by candidate clamping
+ const map=new Map(); sols.forEach(s=>map.set(s.slice(0,4).join(','),s));
+ sols=[...map.values()].sort((p,q)=>p[0]-q[0]||p[1]-q[1]||p[2]-q[2]||p[3]-q[3]);
+ return {best,sols};
+}
+function render(result,C,o){
+ const [V1,R1,V2,R2]=o;
+ if(result.best==null){$('leverage').textContent='—';$('target').textContent='—';$('limitsBody').innerHTML='<tr><td colspan="7" class="empty">Capital ou cotes invalides.</td></tr>';return;}
+ const lev=(result.best/C-1)*100;
+ $('leverage').textContent=fmt(lev)+'%';$('target').textContent=fmt(C*(1+0.05));
+ $('limitsBody').innerHTML=result.sols.length?result.sols.map(s=>`<tr><td>${s[0]}</td><td>${s[1]}</td><td>${s[2]}</td><td>${s[3]}</td><td class="ok">${fmt(s[4])}</td><td class="ok">${fmt(s[5])}</td><td class="ok">${fmt(s[6])}</td></tr>`).join(''):'<tr><td colspan="7" class="empty">Aucune combinaison admissible.</td></tr>';
+ $('rule0').textContent=`T = ${fmt(C)} × (1 + ${fmt(lev)}%) = ${fmt(result.best)}`;
+ $('rule1').textContent=`${fmt(V1)} × a + ${fmt(R1)} × b ≥ ${fmt(result.best)}`;
+ $('rule2').textContent=`${fmt(R1)} × b + ${fmt(R2)} × d ≥ ${fmt(result.best)}`;
+ $('rule3').textContent=`${fmt(V2)} × c + ${fmt(R2)} × d ≥ ${fmt(result.best)}`;
+ $('h1').textContent=`${fmt(V1)}a + ${fmt(R1)}b`; $('h2').textContent=`${fmt(R1)}b + ${fmt(R2)}d`; $('h3').textContent=`${fmt(V2)}c + ${fmt(R2)}d`;
+ setStatus(`${result.sols.length} solution${result.sols.length>1?'s':''} optimale${result.sols.length>1?'s':''} trouvée${result.sols.length>1?'s':''}.`);
+}
+function calculate(){
+ const {C,o}=values();
+ if(!Number.isInteger(C)||C<4){setStatus('Le capital doit être un entier supérieur ou égal à 4.');return}
+ if(o.some(x=>!Number.isFinite(x)||x<=0)){setStatus('Veuillez saisir quatre cotes valides.');return}
+ setStatus('Calcul en cours…');
+ // Let the browser paint before the O(C²) search on larger capitals.
+ setTimeout(()=>render(maxSolve(C,...o),C,o),20);
+}
+function schedule(){clearTimeout(timer);timer=setTimeout(calculate,280)}
+function switchModel(m){
+ model=m;$('tab1').classList.toggle('active',m===1);$('tab2').classList.toggle('active',m===2);
+ if(m===1){$('l1').textContent='V1';$('l2').textContent='R1';$('l3').textContent='V2';$('l4').textContent='R2';['o1','o2','o3','o4'].forEach((id,i)=>$(id).value=defaults.odds[i]);}
+ else { $('l1').textContent='X';$('l2').textContent='12';$('l3').textContent='R1';$('l4').textContent='R2'; ['o1','o2','o3','o4'].forEach((id,i)=>$(id).value=[3.09,1.35,1.35,2.95][i]); }
+ calculate();
+}
+$('tab1').onclick=()=>switchModel(1);$('tab2').onclick=()=>switchModel(2);$('findBtn').onclick=calculate;
+['capital','o1','o2','o3','o4'].forEach(id=>$(id).addEventListener('input',schedule));
+$('resetBtn').onclick=()=>{ $('capital').value=0;['o1','o2','o3','o4'].forEach(id=>$(id).value=0);$('leverage').textContent='—';$('target').textContent='0.00';$('limitsBody').innerHTML='<tr><td colspan="7" class="empty">Saisissez un capital et les cotes pour lancer le calcul.</td></tr>';setStatus('Réinitialisé.');};
+calculate();
+setTimeout(()=>document.getElementById('splash')?.classList.add('hide'),1850);
+if('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+})();
+</script>
+</body>
+</html>
