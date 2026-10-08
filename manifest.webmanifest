@@ -1,0 +1,10 @@
+{
+  "name":"Betru – Calculateur de stratégie de mises",
+  "short_name":"Betru",
+  "start_url":".",
+  "display":"standalone",
+  "background_color":"#050b13",
+  "theme_color":"#07111d",
+  "lang":"fr",
+  "icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}
