@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#02070c">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Betru V14 — Calculateur de stratégie de mises</title>
+<style>
+:root{
+ --bg:#01060b;--panel:#061521;--panel2:#071d2b;--line:#14516a;
+ --gold:#ffd33d;--gold2:#f4a817;--green:#21e7a0;--green2:#0abf79;
+ --cyan:#4edcff;--blue:#78c9ff;--red:#ff5f67;--text:#f3f8fc;--muted:#91a7ba;
+ --shadow:0 18px 50px #000b;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:#01060b;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+body{overflow-x:hidden}
+button,input{font:inherit}
+button{cursor:pointer}
+.app{width:min(980px,100%);margin:auto;padding:10px}
+.shell{display:block;min-height:100vh;border:1px solid #1a566d;border-radius:22px;overflow:hidden;background:#020910;box-shadow:var(--shadow)}
+.hero{
+ position:relative;min-height:100%;padding:28px 28px 24px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;
+ background:
+ radial-gradient(circle at 52% 35%,#17615b55 0 9%,transparent 30%),
+ linear-gradient(180deg,#031321 0%,#020a11 52%,#032019 100%);
+}
+.hero:before{
+ content:"";position:absolute;inset:0;opacity:.42;
+ background:
+ radial-gradient(circle at 18% 15%,#fff 0 1px,transparent 2px),
+ radial-gradient(circle at 78% 19%,#2bdcff 0 1px,transparent 2px),
+ radial-gradient(circle at 33% 44%,#ffd33d 0 1px,transparent 2px),
+ linear-gradient(165deg,transparent 45%,#0a6b5a33 46%,transparent 48%),
+ linear-gradient(15deg,transparent 62%,#ffd33d22 63%,transparent 65%);
+ background-size:170px 150px,210px 180px,260px 210px,100% 100%,100% 100%;
+ pointer-events:none
+}
+.stadium{position:absolute;left:-10%;right:-10%;bottom:-2%;height:44%;border-radius:50% 50% 0 0/55% 55% 0 0;
+ background:
+ radial-gradient(ellipse at 50% 80%,#2bcf7133 0 4%,transparent 5%),
+ linear-gradient(180deg,transparent,#052d25 70%,#06331f);
+ border-top:2px solid #42e9b366;box-shadow:0 -20px 70px #0ae4a025}
+.stadium:after{content:"";position:absolute;left:12%;right:12%;bottom:4%;height:48%;border:2px solid #7dffd74d;border-radius:50% 50% 0 0;transform:perspective(400px) rotateX(62deg)}
+.heroTop{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center}
+.brandMark{width:76px;height:76px;filter:drop-shadow(0 0 16px #ffd33d55)}
+.version{padding:7px 13px;border:1px solid #e5b92f;border-radius:20px;color:var(--gold);font-size:11px;font-weight:900;letter-spacing:1px;background:#07131bd9}
+.brand{position:relative;z-index:2;margin-top:25px}
+.brand h1{margin:0;font-size:clamp(60px,7vw,100px);line-height:.86;letter-spacing:-5px;font-weight:950;background:linear-gradient(180deg,#fff,#e9f0f5 48%,#f7b822 49%,#ffe65c);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 12px 35px #000}
+.brand h1 .g{color:#18e89a}
+.brand p{margin:15px 0 0;max-width:420px;font-size:14px;line-height:1.55;letter-spacing:4px;font-weight:800;color:#e9f2f7}
+.ball{position:absolute;z-index:1;width:260px;height:260px;right:-35px;bottom:13%;border-radius:50%;
+ background:
+ radial-gradient(circle at 35% 28%,#ffffff 0 4%,#d7e1e7 5% 13%,transparent 14%),
+ radial-gradient(circle at 62% 56%,#071019 0 9%,transparent 10%),
+ radial-gradient(circle at 50% 50%,#dce7ec 0 50%,#71818b 68%,#0b151d 76%,transparent 77%);
+ box-shadow:0 0 0 10px #ffd33d22,0 0 55px #ffd33d55,0 0 110px #21e7a033;
+ transform:rotate(-13deg)}
+.ball:before{content:"";position:absolute;inset:24%;border:15px solid #071019;border-radius:36%;transform:rotate(18deg);opacity:.8}
+.ball:after{content:"";position:absolute;inset:4%;border:2px solid #ffffff33;border-radius:50%}
+.benefits{position:relative;z-index:3;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:auto;padding-top:35px}
+.benefit{text-align:center}.benefit .ico{font-size:30px;color:var(--gold);text-shadow:0 0 15px #ffd33d66}.benefit b{display:block;margin-top:5px;font-size:11px}.benefit span{display:block;color:#a9bac6;font-size:9px;margin-top:2px}
+.heroCallout{position:relative;z-index:3;margin-top:20px;padding:15px 18px;border:1px solid #ffd33d77;border-radius:17px;background:linear-gradient(120deg,#062216dd,#09131bdc);box-shadow:0 0 30px #ffd33d17}
+.heroCallout strong{display:block;color:var(--gold);font-size:15px;letter-spacing:1px}.heroCallout span{display:block;margin-top:4px;color:#c6d5df;font-size:10px}
+
+.hero{display:none!important}
+.dashboard{padding:12px;background:
+ radial-gradient(circle at 80% 10%,#0c515044,transparent 35%),
+ linear-gradient(180deg,#020b13,#02070c)}
+.topnav{display:flex;align-items:center;gap:5px;margin-bottom:13px;padding:4px;border-bottom:1px solid #15384a}
+.navitem{padding:9px 13px;color:#b5c5d2;font-size:11px;border-radius:9px}.navitem.active{color:#111;background:linear-gradient(135deg,#ffd33d,#f2ad1d);font-weight:950;box-shadow:0 0 18px #ffd33d2e}.navspacer{flex:1}.mode{border:1px solid #1c556c;border-radius:20px;padding:7px 10px;color:var(--green);font-size:10px;font-weight:900}
+.card{margin:9px 0;padding:13px;border:1px solid #15506a;border-radius:18px;background:linear-gradient(145deg,#061824eF,#020b13eF);box-shadow:0 10px 35px #0008;overflow:hidden}
+.sectionTitle{display:flex;align-items:center;gap:8px;margin:0 0 9px;color:#f2f7fb;font-size:14px;font-weight:950}.num{color:var(--gold)}
+.modelGrid{display:grid;grid-template-columns:1fr 1fr 240px;gap:8px}.modelBtn{padding:14px;border:1px solid #24526a;border-radius:12px;background:#061624;color:#d9e7f0;font-weight:950}.modelBtn.active{background:linear-gradient(135deg,#ffd83e,#f0a916);color:#111;border-color:#ffe989;box-shadow:0 0 22px #ffd33d3d}.modelInfo{padding:10px;border:1px solid #19475d;border-radius:12px;color:#9db1c1;font-size:9px;line-height:1.4}.modelInfo b{color:#f1f7fb;font-size:10px}
+.paramGrid{display:grid;grid-template-columns:1fr 1.45fr;gap:9px}.subgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.field label{display:block;color:#91a8ba;font-size:8px;font-weight:950;margin-bottom:4px}.input{width:100%;padding:10px 11px;background:#020b13;color:var(--blue);border:1px solid #21516b;border-radius:10px;outline:none;font-size:16px;font-weight:950}.input:focus{border-color:var(--cyan);box-shadow:0 0 0 2px #4edcff18}.target{margin-top:7px;padding:8px;border:1px solid #17485f;border-radius:10px;text-align:center}.target strong{color:var(--gold);font-size:21px}.target span{display:block;color:#849bac;font-size:8px}
+.actions{display:grid;grid-template-columns:1.5fr .75fr;gap:8px;margin-top:9px}.btn{border-radius:11px;padding:12px;border:1px solid #29485d;font-weight:950}.primary{color:#111;background:linear-gradient(135deg,#ffe05a,#f0ad1b);border-color:#ffe989;box-shadow:0 0 25px #ffd33d36}.secondary{background:#061522;color:#dbe7ef}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.stat{min-height:90px;padding:11px;border:1px solid #16475e;border-radius:12px;background:#020b13}.stat small{color:#8299ab;font-size:8px;font-weight:950;text-transform:uppercase}.stat strong{display:block;margin-top:5px;color:var(--green);font-size:25px;letter-spacing:-1px}.stat:nth-child(3) strong{color:#2ce6a5}.status{margin-top:7px;color:#8fa5b6;font-size:9px}.ok{color:var(--green)}.warn{color:#ffd45a}.err{color:var(--red)}
+.tableWrap{overflow:auto;border:1px solid #16465e;border-radius:12px}.table{width:100%;min-width:880px;border-collapse:collapse}.table th,.table td{padding:7px 6px;border-bottom:1px solid #123449;text-align:center}.table th{background:#061a28;color:#b8cad8;font-size:8px;line-height:1.25}.table td{font-size:10px;color:#d9e8ef}.table td.green{color:var(--green);font-weight:950}.table td.gold{color:var(--gold);font-weight:950}.table tr.best{background:linear-gradient(90deg,#07352788,#07352722)}.badge{display:inline-flex;min-width:24px;justify-content:center;padding:2px 6px;border-radius:9px;border:1px solid #1d6271;color:var(--green)}
+.rules{display:grid;grid-template-columns:1fr 1fr;gap:5px}.rule{display:grid;grid-template-columns:62px 1fr;gap:7px;padding:7px;border:1px solid #12394f;border-radius:9px;background:#020b13;font-size:9px}.rule b{color:var(--gold)}.rule span{color:#d2dfe8;overflow-wrap:anywhere}
+.simGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.sim{border:1px solid #174a61;border-radius:12px;background:#020a11}.simHead{padding:9px;text-align:center;color:#111;background:linear-gradient(135deg,#ffd23d,#fff17d);font-size:9px;font-weight:950}.simRow{display:grid;grid-template-columns:1.5fr .65fr .85fr;gap:3px;padding:5px;border-bottom:1px solid #102f42;font-size:7px;align-items:center}.simRow:last-child{border:0}.nm{color:#96aabd;line-height:1.2}.abbr{position:relative;color:var(--gold);font-weight:950;text-align:center;border-bottom:1px dotted #2b9c7d;cursor:help}.abbr:after{content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 5px);transform:translateX(-50%);width:180px;padding:7px;border:1px solid #2b627a;border-radius:8px;background:#061725;color:#eff7fb;font-size:9px;line-height:1.3;text-align:left;opacity:0;pointer-events:none;z-index:100}.abbr:hover:after,.abbr:focus:after{opacity:1}.val{color:var(--green);font-weight:950;text-align:right;white-space:nowrap}
+.fund{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.fundbox{padding:10px;border:1px solid #214e63;border-radius:10px;background:#020a11;text-align:center}.fundbox span{display:block;color:#8da4b4;font-size:8px}.fundbox strong{display:block;margin-top:3px;color:var(--gold);font-size:15px}
+@media(max-width:1050px){.shell{grid-template-columns:1fr}.hero{min-height:620px}.dashboard{padding:12px}.modelGrid{grid-template-columns:1fr 1fr}.modelInfo{grid-column:1/-1}.paramGrid{grid-template-columns:1fr}.simGrid{grid-template-columns:1fr}}
+@media(max-width:650px){.app{padding:0}.shell{border-radius:0;border-left:0;border-right:0}.hero{min-height:520px;padding:20px}.brand h1{font-size:68px}.ball{width:190px;height:190px;right:-35px;bottom:17%}.benefits{gap:4px}.benefit .ico{font-size:24px}.benefit b{font-size:9px}.benefit span{font-size:7px}.topnav{overflow:auto;white-space:nowrap}.navitem{font-size:9px;padding:8px}.mode{display:none}.modelGrid,.paramGrid,.actions{grid-template-columns:1fr}.subgrid{grid-template-columns:1fr 1fr}.stats{grid-template-columns:1fr 1fr}.rules{grid-template-columns:1fr}.fund{grid-template-columns:1fr}.sectionTitle{font-size:13px}.card{border-radius:15px;margin:7px 0;padding:11px}}
+
+/* ===== BETRU CINEMATIC UX ===== */
+body:before{
+ content:"";position:fixed;inset:0;pointer-events:none;z-index:9999;
+ background:linear-gradient(105deg,transparent 35%,#ffffff08 48%,transparent 61%);
+ transform:translateX(-120%);animation:stadiumSweep 9s ease-in-out infinite;
+}
+@keyframes stadiumSweep{0%,55%{transform:translateX(-120%)}72%,100%{transform:translateX(120%)}}
+.hero:after{
+ content:"";position:absolute;inset:-20%;
+ pointer-events:none;opacity:.35;
+ background:conic-gradient(from 215deg at 50% 45%,transparent 0 18%,#21e7a018 23%,transparent 29% 55%,#ffd33d12 62%,transparent 69%);
+ animation:stadiumGlow 12s linear infinite;
+}
+@keyframes stadiumGlow{to{transform:rotate(360deg)}}
+.ball{animation:ballFloat 5s ease-in-out infinite,ballGlow 3.5s ease-in-out infinite alternate}
+@keyframes ballFloat{0%,100%{transform:translateY(0) rotate(-13deg)}50%{transform:translateY(-14px) rotate(-7deg)}}
+@keyframes ballGlow{from{filter:brightness(.95);box-shadow:0 0 0 10px #ffd33d18,0 0 45px #ffd33d42,0 0 90px #21e7a022}to{filter:brightness(1.08);box-shadow:0 0 0 10px #ffd33d30,0 0 70px #ffd33d66,0 0 130px #21e7a044}}
+.card{animation:cardIn .65s cubic-bezier(.2,.8,.2,1) both}
+.card:nth-of-type(1){animation-delay:.04s}.card:nth-of-type(2){animation-delay:.08s}.card:nth-of-type(3){animation-delay:.12s}.card:nth-of-type(4){animation-delay:.16s}.card:nth-of-type(5){animation-delay:.20s}
+@keyframes cardIn{from{opacity:0;transform:translateY(12px);filter:blur(2px)}to{opacity:1;transform:none;filter:none}}
+.primary{position:relative;overflow:hidden}
+.primary:after{content:"";position:absolute;top:-30%;bottom:-30%;width:35%;left:-45%;transform:skewX(-18deg);background:#fff8;filter:blur(8px);animation:buttonSweep 4.8s ease-in-out infinite}
+@keyframes buttonSweep{0%,60%{left:-45%}78%,100%{left:125%}}
+.stat strong{transition:transform .25s ease,text-shadow .25s ease}
+.stat:hover strong{transform:translateY(-2px);text-shadow:0 0 20px #21e7a066}
+.table tr.best{position:relative;box-shadow:inset 3px 0 #ffd33d, inset 0 0 35px #21e7a010}
+.sectionTitle .num{display:inline-flex;width:24px;height:24px;align-items:center;justify-content:center;border-radius:50%;background:#ffd33d16;border:1px solid #ffd33d55}
+@media(prefers-reduced-motion:reduce){
+ body:before,.hero:after,.ball,.card,.primary:after{animation:none!important}
+}
+
+.singleHeader{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 12px;margin-bottom:9px;border:1px solid #15506a;border-radius:17px;background:linear-gradient(120deg,#061824,#031019);box-shadow:0 10px 28px #0007}
+.singleBrand{display:flex;align-items:center;gap:10px;min-width:0}
+.singleLogo{width:48px;height:48px;flex:0 0 48px;filter:drop-shadow(0 0 10px #21e7a044)}
+.singleLogo svg{width:100%;height:100%;display:block}
+.singleTitle{font-size:25px;line-height:1;font-weight:950;letter-spacing:-1px;background:linear-gradient(90deg,#fff,#ffd33d 58%,#21e7a0);-webkit-background-clip:text;background-clip:text;color:transparent}
+.singleSubtitle{margin-top:4px;color:#8fa6b8;font-size:11px}
+.singleCriteria{text-align:right;color:#ffd33d;font-size:8px;line-height:1.45;letter-spacing:.3px}
+.currentParams{grid-template-columns:1fr 1fr}
+.currentParams .field{min-width:0}
+@media(max-width:650px){
+ .app{padding:0}.shell{border-radius:0;border-left:0;border-right:0}
+ .dashboard{padding:8px}
+ .singleHeader{padding:9px;border-radius:14px}
+ .singleLogo{width:42px;height:42px;flex-basis:42px}
+ .singleTitle{font-size:22px}.singleSubtitle{font-size:10px}
+ .singleCriteria{font-size:7px}
+ .currentParams{grid-template-columns:1fr 1fr;gap:7px}
+ .currentParams .input{font-size:15px;padding:9px}
+}
+@media(max-width:430px){
+ .singleCriteria{max-width:145px}
+ .singleTitle{font-size:20px}
+ .singleSubtitle{font-size:9px}
+}
+
+/* BETRU FOOTBALL CINEMATIC IDENTITY — decorative only; calculation DOM untouched. */
+.dashboard{position:relative;isolation:isolate;background:
+ radial-gradient(900px 340px at 50% -5%,#0b536044,transparent 65%),
+ linear-gradient(180deg,#020a12 0%,#03111a 52%,#02070c 100%)}
+.dashboard:after{content:"";position:absolute;inset:0;z-index:-2;pointer-events:none;background:
+ radial-gradient(circle at 8% 18%,#fff 0 1px,transparent 2px),radial-gradient(circle at 92% 10%,#ffd33d 0 1px,transparent 2px),radial-gradient(circle at 70% 42%,#4edcff 0 1px,transparent 2px),radial-gradient(circle at 24% 66%,#21e7a0 0 1px,transparent 2px);background-size:190px 170px,230px 210px,270px 230px,310px 280px;opacity:.18}
+.pitchLayer{position:absolute;left:-10%;right:-10%;top:0;height:310px;z-index:-1;overflow:hidden;pointer-events:none;opacity:.5}
+.pitchLayer:before{content:"";position:absolute;left:7%;right:7%;top:52px;height:210px;border:1px solid #22dba044;border-radius:50%;transform:perspective(500px) rotateX(58deg);box-shadow:0 0 80px #16d89c18 inset}
+.pitchLine{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#28dca044,transparent)}
+.pitchLine.p1{top:110px}.pitchLine.p2{top:215px}
+.pitchCircle{position:absolute;width:130px;height:130px;border:1px solid #ffd33d30;border-radius:50%;left:calc(50% - 65px);top:110px}
+.miniBall{position:absolute;right:5%;top:32px;font-size:54px;filter:drop-shadow(0 8px 18px #000) drop-shadow(0 0 12px #4edcff44);animation:ballFloat 5s ease-in-out infinite}
+@keyframes ballFloat{0%,100%{transform:translate3d(0,0,0) rotate(-4deg)}50%{transform:translate3d(-8px,13px,0) rotate(7deg)}}
+.singleHeader{position:relative;overflow:hidden;background:linear-gradient(115deg,#061522f2,#031019eF 55%,#08251ff2);border-color:#1b6379;box-shadow:0 12px 32px #0009,inset 0 1px #ffffff0b}
+.singleHeader:after{content:"";position:absolute;inset:auto -20% -45px;height:80px;background:radial-gradient(ellipse,#20e7a022,transparent 65%);pointer-events:none}
+.singleLogo{width:58px;height:58px;flex:0 0 58px;border-radius:17px;overflow:hidden;background:#02070c;box-shadow:0 0 0 1px #ffd33d55,0 0 28px #21e7a044}
+.singleLogo img{width:100%;height:100%;display:block}
+.singleTitle{font-size:29px;text-shadow:0 0 22px #ffd33d22}
+.singleCriteria{position:relative;z-index:1}
+.sectionTitle{position:relative;display:flex;align-items:center;gap:7px;text-shadow:0 0 16px #ffd33d15}
+.sectionTitle:after{content:"";height:2px;flex:1;margin-left:8px;background:linear-gradient(90deg,#ffd33d44,transparent);border-radius:2px}
+.card{position:relative;background:linear-gradient(145deg,#061824ef,#020b13ed);border-color:#155d75;box-shadow:0 10px 35px #0009,inset 0 1px #ffffff06;backdrop-filter:blur(6px)}
+.card:hover{border-color:#1b7891}
+.target strong{font-variant-numeric:tabular-nums;text-shadow:0 0 20px #ffd33d44}
+.primary{box-shadow:0 0 22px #ffd33d1e,inset 0 1px #fff7}
+.stat strong,.green,.ok{ text-shadow:0 0 16px #21e7a044 }
+.best{box-shadow:inset 3px 0 #ffd33d,0 0 22px #21e7a010}
+@media(max-width:650px){.pitchLayer{height:220px}.miniBall{font-size:38px;right:3%;top:30px}.singleLogo{width:50px;height:50px;flex-basis:50px;border-radius:15px}.singleTitle{font-size:24px}.card{backdrop-filter:none}}
+@media(prefers-reduced-motion:reduce){.miniBall{animation:none}.card{animation:none!important}}
+</style>
+</head>
+<body>
+<div class="app"><div class="shell">
+
+<aside class="hero">
+<div class="stadium"></div>
+<div class="heroTop">
+<svg class="brandMark" viewBox="0 0 100 100" aria-label="Logo Betru">
+<defs><linearGradient id="g1" x1="0" x2="1"><stop stop-color="#fff0a2"/><stop offset=".45" stop-color="#ffd33d"/><stop offset="1" stop-color="#f19c12"/></linearGradient></defs>
+<path d="M23 38c2-17 11-27 27-27 15 0 24 10 27 27" fill="none" stroke="url(#g1)" stroke-width="7" stroke-linecap="round"/>
+<path d="M27 37h46l-5 48H32z" fill="#07151e" stroke="url(#g1)" stroke-width="5"/>
+<path d="M39 28l11-15 11 15-5-2 5 9H34l5-9z" fill="url(#g1)"/>
+<circle cx="50" cy="56" r="14" fill="#f4f7f8" stroke="#07151e" stroke-width="3"/>
+<path d="M50 45l4 8 9 1-7 6 2 9-8-5-8 5 2-9-7-6 9-1z" fill="#07151e"/>
+<path d="M61 78c10-8 17-11 27-17" fill="none" stroke="#20e7a0" stroke-width="6" stroke-linecap="round"/>
+<path d="M80 61h10v10" fill="none" stroke="#20e7a0" stroke-width="6"/>
+</svg>
+<div class="version"></div>
+</div>
+<div class="brand">
+<h1>Bet<span class="g">ru</span></h1>
+<p>CALCULATEUR DE<br>STRATÉGIE DE MISES</p>
+</div>
+<div class="ball"></div>
+<div class="benefits">
+<div class="benefit"><div class="ico">◎</div><b>ANALYSE</b><span>Précise</span></div>
+<div class="benefit"><div class="ico">▥</div><b>STRATÉGIE</b><span>Optimale</span></div>
+<div class="benefit"><div class="ico">♛</div><b>RÉSULTATS</b><span>Maximisés</span></div>
+</div>
+<div class="heroCallout"><strong>⚽ TRANSFORMEZ VOTRE ANALYSE EN AVANTAGE</strong><span>Un moteur optimisé pour des calculs fiables, même sur mobile.</span></div>
+</aside>
+
+<main class="dashboard"><div class="pitchLayer" aria-hidden="true"><div class="pitchLine p1"></div><div class="pitchLine p2"></div><div class="pitchCircle"></div><div class="miniBall">⚽</div></div>
+<header class="singleHeader">
+  <div class="singleBrand">
+    <div class="singleLogo" aria-label="Logo Betru"><img src="logo.svg" alt="Betru — football stratégie" loading="eager"></div>
+    <div>
+      <div class="singleTitle">Betru</div>
+      <div class="singleSubtitle">Calculateur de stratégie de mises</div>
+    </div>
+  </div>
+  <div class="singleCriteria">
+    <b>NUL_X · VICTOIRE_12</b>
+    <b>REMBOURSESINUL_1 · REMBOURSESINUL_2</b>
+  </div>
+</header>
+
+
+
+
+
+
+<section class="card">
+  <h2 class="sectionTitle"><span class="num">①</span> CAPITAL INITIAL</h2>
+  <div class="paramGrid currentParams">
+    <div class="field">
+      <label>CAI — Capital initial</label>
+      <input class="input" id="capital" type="number" value="100" min="1" step="1">
+    </div>
+    <div class="field">
+      <label>p — Pourcentage</label>
+      <input class="input" id="p" type="number" value="5" min="0" step=".01">
+    </div>
+  </div>
+  <div class="target"><strong id="target">105.00</strong><span>Objectif = CAI × (1 + p)</span></div>
+</section>
+
+<section class="card">
+  <h2 class="sectionTitle"><span class="num">②</span> PARAMÈTRES DU MATCH : CRITÈRES ET CÔTES</h2>
+  <div class="subgrid">
+    <div class="field"><label>NUL_X — C1</label><input class="input" id="c1" value="2.87" type="number" step=".01"></div>
+    <div class="field"><label>VICTOIRE_12 — C2</label><input class="input" id="c2" value="1.38" type="number" step=".01"></div>
+    <div class="field"><label>REMBOURSESINUL_1 — C3</label><input class="input" id="c3" value="1.91" type="number" step=".01"></div>
+    <div class="field"><label>REMBOURSESINUL_2 — C4</label><input class="input" id="c4" value="1.79" type="number" step=".01"></div>
+  </div>
+  <div class="actions"><button class="btn primary" id="solve">⚽ &nbsp; TROUVER LES SOLUTIONS</button><button class="btn secondary" id="reset">↻ &nbsp; RÉINITIALISER</button></div>
+  <div class="status" id="status">Prêt à calculer.</div>
+</section>
+
+<section class="card">
+<h2 class="sectionTitle"><span class="num">③</span> RÉSULTATS PRINCIPAUX</h2>
+<div class="stats">
+<div class="stat"><small>Nombre de solutions à p</small><strong id="count">—</strong></div>
+<div class="stat"><small>Pmax — Pourcentage maximal</small><strong id="pmax">—</strong></div>
+<div class="stat"><small>Tmax — Objectif limite</small><strong id="tmax">—</strong></div>
+<div class="stat"><small>Solutions optimales</small><strong id="lc">—</strong></div>
+</div>
+</section>
+
+<section class="card">
+<h2 class="sectionTitle"><span class="num">④</span> LIMITES — COMBINAISONS OPTIMALES</h2>
+<div class="status">Toutes les combinaisons qui atteignent le pourcentage maximal. Les colonnes de résultats vérifient les règles de base.</div>
+<div class="tableWrap" style="margin-top:8px"><table class="table"><thead><tr>
+<th>#</th><th>a</th><th>b</th><th>c</th><th>d</th>
+<th>Victoire favoris<br>(C2×b)+(C4×d)</th><th>Victoire tocard<br>(C2×b)+(C3×c)</th>
+<th>Nul<br>(C1×a)+(C3×c)+(C4×d)</th><th>Annulé et Nul<br>(C1×a)+(1×c)+(1×d)</th>
+</tr></thead><tbody id="limits"></tbody></table></div>
+</section>
+
+<section class="card"><h2 class="sectionTitle"><span class="num">⑤</span> RÈGLES LIMITES</h2><div class="rules" id="rules"></div></section>
+
+<section class="card">
+<h2 class="sectionTitle"><span class="num">⑥</span> RÈGLES DE TYPE « SIMEU »</h2>
+<div class="status">Survolez ou appuyez sur une abréviation pour voir sa signification.</div>
+<div class="simGrid" id="sim" style="margin-top:8px"></div>
+</section>
+
+<section class="card"><h2 class="sectionTitle"><span class="num">⑦</span> ESTIMATION DE L’ITÉRATION</h2><div class="simGrid" id="iter"></div></section>
+<section class="card"><h2 class="sectionTitle"><span class="num">⑧</span> FOND DE JEU À DISPOSER</h2><div class="fund" id="fund"></div></section>
+
+</main></div></div>
+
+<script>
+const $=id=>document.getElementById(id),fmt=x=>Number(x).toFixed(2);
+const tips={SCAI:"Capital initial = CAI",SCAJ:"Côte à jouer",SMAJ:"Mise à jouer",SSCAI:"Solde sur le capital initial",SGTNE:"Gain total net espéré",SBTNE:"Bénéfice total net espéré",SOPE:"Objectif périodique espéré",SCAF:"Capital final espéré",SMPSCAI:"Montant perdu sur capital initial",SOPEI:"Objectif périodique espéré itéré",SCAFI:"Capital final espéré itéré",SGTNEI:"Gain total net espéré itéré",SBTNEI:"Bénéfice total net espéré itéré",SMAJI:"Mise à jouer itérée",NCAI:"Nouveau capital initial",SNCAI:"Solde sur nouveau capital initial",FDJR:"Fond de jeu recommandé = NCAI"};
+const ab=k=>`<span class="abbr" tabindex="0" data-tip="${tips[k]||k}">${k}</span>`;
+function v(){return{C:+$("capital").value,p:+$("p").value/100,c1:+$("c1").value,c2:+$("c2").value,c3:+$("c3").value,c4:+$("c4").value}}
+function renderRules(){const r=[["R1","C1 > C3 > C4 > C2"],["R2","C1×a + C3×c + C4×d ≥ CAI×(1+pmax)"],["R3","C2×b + C3×c ≥ CAI"],["R4","C2×b + C4×d ≥ CAI"],["R5","C1×a − C3×c ≥ min(Ci)"],["R6","C1×a − C4×d ≥ min(Ci)"],["R7","C3×c − C4×d ≥ min(Ci)"],["R8","C3×c > C4×d"],["R9","a,b,c,d ≥ max(Ci)+min(Ci)"],["R10","a+b+c+d ≤ CAI"],["Pmax","Pmax = (Tmax / CAI) − 1"],["Tmax","Tmax = max(C1×a + C3×c + C4×d)"]];$("rules").innerHTML=r.map(x=>`<div class="rule"><b>${x[0]}</b><span>${x[1]}</span></div>`).join("")}
+function scenario(C,cote,mise,perte){let SCAI=C,SCAJ=cote,SMAJ=mise,SSCAI=C-mise,SGTNE=cote*mise,SBTNE=SGTNE-mise,SOPE=SBTNE,SCAF=SSCAI+SGTNE,SMPSCAI=perte,SOPEI=2*SOPE,SCAFI=SMPSCAI+SGTNE+SOPEI,SGTNEI=SCAFI,SBTNEI=SOPEI,SMAJI=SCAFI-SOPEI,NCAI=SCAF+SMAJI,SNCAI=NCAI-SMAJI;return{SCAI,SCAJ,SMAJ,SSCAI,SGTNE,SBTNE,SOPE,SCAF,SMPSCAI,SOPEI,SCAFI,SGTNEI,SBTNEI,SMAJI,NCAI,SNCAI,FDJR:NCAI}}
+function rows(s,it=false){let R=it?[["Objectif périodique espéré itéré","SOPEI",s.SOPEI],["Capital final espéré itéré","SCAFI",s.SCAFI],["Gain total net espéré itéré","SGTNEI",s.SGTNEI],["Bénéfice total net espéré itéré","SBTNEI",s.SBTNEI],["Mise à jouer itérée","SMAJI",s.SMAJI],["Nouveau capital initial","NCAI",s.NCAI],["Solde sur nouveau capital initial","SNCAI",s.SNCAI]]:[["Capital initial","SCAI",s.SCAI],["Côte à jouer","SCAJ",s.SCAJ],["Mise à jouer","SMAJ",s.SMAJ],["Solde sur CAI","SSCAI",s.SSCAI],["Gain total net espéré","SGTNE",s.SGTNE],["Bénéfice total net espéré","SBTNE",s.SBTNE],["Objectif périodique espéré","SOPE",s.SOPE],["Capital final espéré","SCAF",s.SCAF],["Montant perdu sur capital initial","SMPSCAI",s.SMPSCAI]];return R.map(r=>`<div class="simRow"><div class="nm">${r[0]}</div>${ab(r[1])}<div class="val">${fmt(r[2])}</div></div>`).join("")}
+function C1a1c1d(c1,a,c,d){return c1*a+c+d}
+function renderSim(o){let x=v(),a=o.a,b=o.b,c=o.c,d=o.d,C=x.C;const annuleNul=C1a1c1d(x.c1,a,c,d);let A=[["MATCH ANNULÉ ET NUL",.5*(x.c3+x.c4),.5*(c+d),C-x.c3-x.c4],["MATCH ANNULÉ ET VICTOIRE DE 1",x.c3,c,C-a*x.c1-x.c3],["MATCH ANNULÉ ET VICTOIRE DE 2",x.c4,d,C-b*x.c2-x.c4]].map(z=>({title:z[0],...scenario(C,z[1],z[2],z[3])}));$("sim").innerHTML=A.map(s=>`<article class="sim"><div class="simHead">${s.title}</div>${rows(s)}</article>`).join("");$("iter").innerHTML=A.map(s=>`<article class="sim"><div class="simHead">ITÉRATION — ${s.title.replace("MATCH ANNULÉ ET ","")}</div>${rows(s,true)}</article>`).join("");$("fund").innerHTML=A.map(s=>`<div class="fundbox"><span>FOND DE JEU RECOMMANDÉ</span><strong>${ab("FDJR")} = ${fmt(s.FDJR)}</strong></div>`).join("")}
+function exactCount(x){const{C,c1,c2,c3,c4,p}=x,mn=Math.ceil(Math.max(c1,c2,c3,c4)+Math.min(c1,c2,c3,c4)-1e-10),minC=Math.min(c1,c2,c3,c4),target=C*(1+p);let n=0;for(let a=mn;a<=C-3*mn;a++)for(let b=mn;b<=C-a-2*mn;b++){const cMin=Math.max(mn,Math.ceil((C-c2*b-1e-10)/c3));for(let c=cMin;c<=C-a-b-mn;c++){if(c1*a-c3*c<minC-1e-9)continue;let dMin=Math.max(mn,Math.ceil((C-c2*b)/c4-1e-10),Math.ceil((target-c1*a-c3*c)/c4-1e-10));let dMax=Math.min(C-a-b-c,Math.floor((c3*c-minC)/c4+1e-10),Math.floor((c1*a-minC)/c4+1e-10),Math.ceil(c3*c/c4-1)-0);if(dMax>=dMin)n+=dMax-dMin+1}}return n}
+function solve(){const x=v();$("target").textContent=fmt(x.C*(1+x.p));renderRules();if(!(x.c1>x.c3&&x.c3>x.c4&&x.c4>x.c2)){$("status").innerHTML='<span class="err">Ordre requis : C1 &gt; C3 &gt; C4 &gt; C2.</span>';return}$("status").innerHTML='<span class="warn">⚡ Calcul optimisé en cours…</span>';const w=new Worker("./worker.js"),timer=setTimeout(()=>{w.terminate();$("status").innerHTML='<span class="err">Calcul interrompu pour protéger l’appareil.</span>'},15000);w.onmessage=e=>{clearTimeout(timer);w.terminate();if(!e.data.ok){$("status").innerHTML='<span class="err">Erreur moteur : '+e.data.error+'</span>';return}const M=e.data;$("tmax").textContent=fmt(M.tmax);$("pmax").textContent=fmt((M.tmax/x.C-1)*100)+" %";$("lc").textContent=M.limits.length;$("limits").innerHTML=M.limits.map((s,i)=>`<tr class="${i===0?"best":""}"><td><span class="badge">${i+1}</span></td><td class="gold">${s.a}</td><td class="gold">${s.b}</td><td class="gold">${s.c}</td><td class="gold">${s.d}</td><td class="green">${fmt(x.c2*s.b+x.c4*s.d)}</td><td class="green">${fmt(x.c2*s.b+x.c3*s.c)}</td><td class="green">${fmt(x.c1*s.a+x.c3*s.c+x.c4*s.d)}</td><td class="green">${fmt(x.c1*s.a+s.c+s.d)}</td></tr>`).join("");renderSim(M.limits[0]);if(x.C<=180){const n=exactCount(x);$("count").textContent=n.toLocaleString("fr-FR");$("status").innerHTML=`<span class="ok">✓ Calcul exact terminé : ${n.toLocaleString("fr-FR")} solutions à +${fmt(x.p*100)}%.</span>`}else{$("count").textContent="—";$("status").innerHTML='<span class="warn">⚡ Mode gros capital sécurisé : Tmax/Pmax/limites calculés sans balayage 4D. Le dénombrement exhaustif est désactivé pour protéger les appareils mobiles.</span>'}};w.onerror=()=>{clearTimeout(timer);w.terminate();$("status").innerHTML='<span class="err">Le moteur de calcul n’a pas pu être lancé.</span>'};w.postMessage({v:x})}
+$("solve").onclick=solve;$("reset").onclick=()=>{["capital","c1","c2","c3","c4"].forEach((id,i)=>$(id).value=[100,2.87,1.38,1.91,1.79][i]);solve()};solve();
+</script>
+
+<script>
+(function(){
+ const ids=["count","pmax","tmax","lc"];
+ function animateValue(el,target,duration=650){
+   if(!el || !isFinite(target)) return;
+   const start=performance.now(), from=0;
+   function tick(now){
+     const p=Math.min(1,(now-start)/duration), e=1-Math.pow(1-p,3);
+     const val=from+(target-from)*e;
+     el.textContent = el.id==="count"||el.id==="lc" ? Math.round(val).toLocaleString("fr-FR") :
+       val.toFixed(2)+(el.id==="pmax"?" %":"");
+     if(p<1) requestAnimationFrame(tick);
+   }
+   requestAnimationFrame(tick);
+ }
+ const obs=new MutationObserver(()=>{
+   ids.forEach(id=>{
+     const el=document.getElementById(id); if(!el) return;
+     const raw=el.textContent.replace(/\s/g,"").replace("%","").replace(",",".");
+     const n=Number(raw); if(isFinite(n)&&!el.dataset.animated){el.dataset.animated="1";animateValue(el,n)}
+   });
+ });
+ obs.observe(document.body,{subtree:true,childList:true,characterData:true});
+})();
+</script>
+</body>
+</html>
+<style>
+/* Single-model Betru: no legacy model selector, no legacy navigation, no legacy hero. */
+.hero,.topnav,.modelGrid,.modelBtn,.modelInfo{display:none!important}
+</style>
