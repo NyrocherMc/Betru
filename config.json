@@ -1,0 +1,32 @@
+{
+  "app":"Betru",
+  "version":"V13",
+  "model":"NUL_X | VICTOIRE_12 | REMBOURSESINUL_1 | REMBOURSESINUL_2",
+  "coefficients":{"C1":2.87,"C2":1.38,"C3":1.91,"C4":1.79},
+  "defaults":{"capital":100,"percentage":5},
+  "order":"C1 > C3 > C4 > C2",
+  "rules":{
+    "R1":"(C1*a + C3*c + C4*d) >= CAI*(1+p)",
+    "R2":"(C2*b + C3*c) >= CAI",
+    "R3":"(C2*b + C4*d) >= CAI",
+    "R4":"(C1*a - C3*c) >= min(Ci)",
+    "R5":"(C1*a - C4*d) >= min(Ci)",
+    "R6":"a+b+c+d <= CAI",
+    "R7":"a,b,c,d >= max(Ci)+min(Ci)"
+  },
+  "limit":{
+    "pmax":"(Tmax/CAI)-1",
+    "tmax":"max(C1*a+C3*c+C4*d)"
+  },
+  "performance":{
+    "exactCountMaxCapital":220,
+    "maxEngine":"O(CAI) scan on b",
+    "largeCapitalMode":"Tmax/Pmax/limit solutions only"
+  },
+  "simulation":{
+    "nul":{"COTE_DEFICITAIRE":"0.50*(C3+C4)","SMAJ":"0.50*(c+d)","SMPSCAI":"CAI-(1*C3)-(1*C4)"},
+    "victoire1":{"COTE_DEFICITAIRE":"C3","SMAJ":"c","SMPSCAI":"CAI-(a*C1)-(1*C3)"},
+    "victoire2":{"COTE_DEFICITAIRE":"C4","SMAJ":"d","SMPSCAI":"CAI-(b*C2)-(1*C4)"},
+    "common":["SCAI=CAI","SSCAI=SCAI-SMAJ","SGTNE=SCAJ*SMAJ","SBTNE=SGTNE-SMAJ","SOPE=SBTNE","SCAF=SSCAI+SGTNE","SOPEI=2*SOPE","SCAFI=SMPSCAI+SGTNE+SOPEI","SGTNEI=SCAFI","SBTNEI=SOPEI","SMAJI=SCAFI-SOPEI","NCAI=SCAF+SMAJI","SNCAI=NCAI-SMAJI","FDJR=NCAI"]
+  }
+}

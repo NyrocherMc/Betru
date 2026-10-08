@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#02070d">
+<meta name="description" content="Betru — moteur de calcul des approches de mises">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg">
+<title>Betru — Calculateur de stratégie de mises</title>
+<style>
+:root{--bg:#02070d;--panel:#061522;--panel2:#081d2b;--line:#17536b;--gold:#ffd33f;--gold2:#ffb51d;--green:#20e7a0;--cyan:#54dcff;--blue:#6bcaff;--red:#ff5d62;--text:#edf7ff;--muted:#91a8be}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#02070d;color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+body{background:radial-gradient(circle at 75% 0,#073f47 0,#061421 30%,#02070d 73%);overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.12;background:linear-gradient(90deg,transparent 49.7%,#54dcff 50%,transparent 50.3%),radial-gradient(ellipse at 50% 100%,transparent 0 30%,#20e7a012 31% 31.5%,transparent 32%)}
+.app{width:min(1180px,100%);margin:auto;padding:9px 9px 28px}.card{position:relative;margin:8px 0;padding:12px;border:1px solid #18506a;border-radius:18px;background:linear-gradient(145deg,#071927f5,#020b13f7);box-shadow:0 10px 30px #0009;overflow:hidden}
+.card:after{content:"";position:absolute;right:-80px;top:-100px;width:220px;height:220px;border:1px solid #20e7a014;border-radius:50%;box-shadow:0 0 0 24px #20e7a006,0 0 0 52px #20e7a003;pointer-events:none}
+.hero{display:flex;align-items:center;gap:10px;padding:8px 12px;background:linear-gradient(105deg,#06121d,#063740 58%,#061421)}
+.logo{width:58px;height:58px;flex:none}.logo svg{width:100%;height:100%}.hero h1{margin:0;font-size:27px;line-height:1}.sub{margin-top:3px;color:#a9bdcf;font-size:11px}.model{margin-left:auto;white-space:nowrap;color:var(--gold);font-weight:950;font-size:10px;letter-spacing:.15px}
+.title{margin:0 0 8px;color:var(--gold);font-size:14px;font-weight:950;letter-spacing:.35px;text-transform:uppercase}.green{color:#baf79e}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.field label{display:block;margin-bottom:4px;color:#94abc1;font-size:9px;font-weight:950}
+.input{width:100%;border:1px solid #1d4d68;background:#030c15;color:var(--blue);border-radius:11px;padding:10px 11px;font-size:17px;font-weight:950;outline:none}.input:focus{border-color:var(--cyan);box-shadow:0 0 0 2px #54dcff18}
+.target{margin-top:8px;padding:7px;border:1px solid #19445c;border-radius:11px;background:#030c15;text-align:center}.target strong{display:block;color:var(--gold);font-size:24px}.target span{font-size:9px;color:var(--muted)}
+.actions{display:grid;grid-template-columns:1.25fr 1fr;gap:8px;margin-top:8px}.btn{padding:11px;border-radius:11px;border:1px solid #314658;font-weight:950;cursor:pointer}.primary{background:linear-gradient(135deg,#ffd94d,#f3ad1b);color:#101010;border-color:#ffe784;box-shadow:0 0 20px #ffd33f32}.secondary{background:#071624;color:#dce9f5}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.stat{border:1px solid #16445c;border-radius:12px;background:#030d16;padding:9px}.stat small{display:block;color:#8198ae;font-size:8px;font-weight:950;text-transform:uppercase}.stat strong{display:block;margin-top:3px;color:var(--green);font-size:20px}
+.notice{margin-top:7px;color:#8ea5ba;font-size:9px;line-height:1.35}.warn{color:#ffd55a}
+.tablewrap{width:100%;overflow:auto;border:1px solid #16445c;border-radius:12px}.table{width:100%;min-width:930px;border-collapse:collapse}.table th,.table td{padding:7px 6px;border-bottom:1px solid #123249;text-align:center}.table th{background:#081b2b;color:#b9cadb;font-size:9px}.table td{color:var(--green);font-size:11px;font-weight:950}.table td.var{color:var(--gold)}
+.rules{display:grid;grid-template-columns:1fr 1fr;gap:5px}.rule{display:grid;grid-template-columns:64px 1fr;gap:6px;align-items:start;padding:7px;border:1px solid #12364c;border-radius:9px;background:#030c15;font-size:10px}.rule b{color:var(--gold)}.rule span{color:#d5e2ee;overflow-wrap:anywhere}
+.simtitle{display:flex;justify-content:space-between;align-items:center;gap:7px}.hint{color:#8197ad;font-size:8px}.simgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.sim{border:1px solid #1a4a63;border-radius:12px;background:#020b13;overflow:hidden}.simhead{min-height:43px;display:flex;align-items:center;justify-content:center;padding:7px 5px;text-align:center;background:linear-gradient(135deg,#ffd03b,#fff07b);color:#111;font-size:10px;font-weight:950}.simbody{padding:4px}.simrow{display:grid;grid-template-columns:1.5fr .55fr .9fr;gap:3px;align-items:center;padding:5px 2px;border-bottom:1px solid #123147;font-size:8px}.simrow:last-child{border:0}.nm{color:#9aafc2;line-height:1.15}.abbr{position:relative;color:var(--gold);font-weight:950;text-align:center;border-bottom:1px dotted #2b9979;cursor:help}.abbr:after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 5px);width:190px;padding:6px;border:1px solid #2c6882;border-radius:7px;background:#061524;color:#f0f7ff;font-size:9px;line-height:1.25;text-align:left;opacity:0;pointer-events:none;z-index:50}.abbr:hover:after,.abbr:focus:after{opacity:1}.val{color:var(--green);font-weight:950;text-align:right;white-space:nowrap}
+.fund{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.fundbox{border:1px solid #294d63;border-radius:10px;padding:8px;background:#020a11}.fundbox span{color:#aab8c6;font-size:8px}.fundbox strong{display:block;margin-top:2px;color:#ffe047;text-align:center;font-size:17px}
+@media(max-width:760px){.grid4{grid-template-columns:1fr 1fr}.stats{grid-template-columns:1fr 1fr}.rules{grid-template-columns:1fr}.simgrid{grid-template-columns:1fr}.fund{grid-template-columns:1fr}.model{font-size:8px}}
+@media(max-width:480px){.grid2,.actions{grid-template-columns:1fr}.model{display:none}.hero{padding:8px}.logo{width:50px;height:50px}.hero h1{font-size:24px}.title{font-size:13px}.input{font-size:16px}}
+</style>
+</head>
+<body>
+<main class="app">
+<header class="card hero"><div class="logo"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="#06131d" stroke="#27ddd1" stroke-width="5"/><path d="M30 40h40l-4 42H34z" fill="none" stroke="#ffd33f" stroke-width="6"/><path d="M34 40c3-18 29-18 32 0" fill="none" stroke="#ffd33f" stroke-width="6"/><circle cx="50" cy="56" r="11" fill="#fff"/><path d="M43 56l5 5 10-12" fill="none" stroke="#06131d" stroke-width="4"/><path d="M64 74l20-14v19" fill="none" stroke="#20e7a0" stroke-width="5"/></svg></div><div><h1>Betru</h1><div class="sub">Calculateur de stratégie de mises</div></div><div class="model">NUL_X | VICTOIRE_12 | REMBOURSESINUL_1 | REMBOURSESINUL_2</div></header>
+
+<section class="card"><div class="title">CAPITAL INITIAL</div><div class="grid2">
+<div class="field"><label>CAI — CAPITAL INITIAL</label><input class="input" id="capital" type="number" value="100" min="20" step="1"></div>
+<div class="field"><label>p — POURCENTAGE</label><input class="input" id="pct" type="number" value="5" step=".01"></div>
+</div><div class="target"><strong id="target">105.00</strong><span>Objectif = CAI × (1 + p)</span></div></section>
+
+<section class="card"><div class="title">PARAMÈTRES DU MATCH : <span class="green">CRITÈRES ET CÔTES</span></div>
+<div class="grid4">
+<div class="field"><label>NUL_X — C1</label><input class="input" id="c1" value="2.87" type="number" step=".01"></div>
+<div class="field"><label>VICTOIRE_12 — C2</label><input class="input" id="c2" value="1.38" type="number" step=".01"></div>
+<div class="field"><label>REMBOURSESINUL_1 — C3</label><input class="input" id="c3" value="1.91" type="number" step=".01"></div>
+<div class="field"><label>REMBOURSESINUL_2 — C4</label><input class="input" id="c4" value="1.79" type="number" step=".01"></div>
+</div><div class="notice">Le favoris = REMBOURSESINUL_1 · Le tocard = REMBOURSESINUL_2</div>
+<div class="actions"><button class="btn primary" id="solve">⚽ Trouver les solutions</button><button class="btn secondary" id="reset">↻ Réinitialiser la fenêtre actuelle</button></div>
+<div class="notice" id="status">Prêt à calculer.</div></section>
+
+<section class="card"><div class="title">LEVERAGE</div><div class="stats">
+<div class="stat"><small>Solutions à p</small><strong id="count">—</strong></div><div class="stat"><small>Pourcentage maximal Pmax</small><strong id="pmax">—</strong></div><div class="stat"><small>Objectif limite Tmax</small><strong id="tmax">—</strong></div><div class="stat"><small>Solutions optimales</small><strong id="lc">—</strong></div>
+</div><div class="notice">Pourcentage maximal atteignable avec le capital et les côtes actuels, en respectant les règles limites.</div></section>
+
+<section class="card"><div class="title">LIMITES</div><div class="notice">Toutes les combinaisons qui atteignent le leverage maximal. Les quatre dernières colonnes vérifient les règles de base.</div><div class="tablewrap" style="margin-top:7px"><table class="table"><thead><tr><th>a</th><th>b</th><th>c</th><th>d</th><th>Victoire favoris<br>(C2×b)+(C4×d)</th><th>Victoire tocard<br>(C2×b)+(C3×c)</th><th>Nul<br>(C1×a)+(C3×c)+(C4×d)</th><th>Annulé<br>(C1×a)+(1×c)+(1×d)</th></tr></thead><tbody id="limits"></tbody></table></div></section>
+
+<section class="card"><div class="title">RÈGLES LIMITES</div><div class="rules" id="rules"></div></section>
+
+<section class="card"><div class="simtitle"><div class="title" style="margin:0">RÈGLES DE TYPE « SIMEU » POUR RÉSULTATS DÉFICITAIRES</div><div class="hint">Appuyez/survolez une abréviation pour son explication.</div></div><div class="simgrid" id="sim"></div></section>
+<section class="card"><div class="title">ESTIMATION DE L’ITÉRATION</div><div class="simgrid" id="iter"></div></section>
+<section class="card"><div class="title">FOND DE JEU À DISPOSER</div><div class="notice">Fond de jeu à disposer si le premier match sort déficitaire, à rattraper sur le prochain match.</div><div class="fund" id="fund"></div></section>
+<footer style="text-align:center;color:#607990;font-size:9px;padding:9px">Betru – Moteur de calcul des approches de mises – aide à la décision</footer>
+</main>
+<script>
+const $=id=>document.getElementById(id),fmt=x=>Number(x).toFixed(2);
+const tips={SCAI:"Capital initial",SCAJ:"Côte à jouer",SMAJ:"Mise à jouer",SSCAI:"Solde sur capital initial",SGTNE:"Gain total net espéré",SBTNE:"Bénéfice total net espéré",SOPE:"Objectif périodique espéré",SCAF:"Capital final espéré",SMPSCAI:"Montant perdu sur capital initial",SOPEI:"Objectif périodique espéré itéré",SCAFI:"Capital final espéré itéré",SGTNEI:"Gain total net espéré itéré",SBTNEI:"Bénéfice total net espéré itéré",SMAJI:"Mise à jouer itérée",NCAI:"Nouveau capital initial",SNCAI:"Solde sur nouveau capital initial",FDJR:"Fond de jeu recommandé"};
+const ab=k=>`<span class="abbr" tabindex="0" data-tip="${tips[k]||k}">${k}</span>`;
+function v(){return{C:+$("capital").value,p:+$("pct").value/100,c1:+$("c1").value,c2:+$("c2").value,c3:+$("c3").value,c4:+$("c4").value}}
+function renderRules(){let r=[["Formule Pmax","Pmax = (Tmax / CAI) − 1"],["Objectif limite","Tmax = maximum de (C1×a + C3×c + C4×d)"],["Règle 1","C1 > C3 > C4 > C2"],["Règle 2","(C1×a + C3×c + C4×d) ≥ CAI × (1 + pmax)"],["Règle 3","(C2×b + C3×c) ≥ CAI"],["Règle 4","(C2×b + C4×d) ≥ CAI"],["Règle 5","(C1×a − C3×c) ≥ min(Ci)"],["Règle 6","(C1×a − C4×d) ≥ min(Ci)"],["Règle 7","(a,b,c,d) ≥ max(Ci) + min(Ci)"],["Règle 8","(a+b+c+d) ≤ CAI"]];$("rules").innerHTML=r.map(x=>`<div class="rule"><b>${x[0]}</b><span>${x[1]}</span></div>`).join("")}
+function scenario(C,cote,mise,perte){let SCAI=C,SCAJ=cote,SMAJ=mise,SSCAI=SCAI-SMAJ,SGTNE=SCAJ*SMAJ,SBTNE=SGTNE-SMAJ,SOPE=SBTNE,SCAF=SSCAI+SGTNE,SMPSCAI=perte,SOPEI=2*SOPE,SCAFI=SMPSCAI+SGTNE+SOPEI,SGTNEI=SCAFI,SBTNEI=SOPEI,SMAJI=SCAFI-SOPEI,NCAI=SCAF+SMAJI,SNCAI=NCAI-SMAJI;return{SCAI,SCAJ,SMAJ,SSCAI,SGTNE,SBTNE,SOPE,SCAF,SMPSCAI,SOPEI,SCAFI,SGTNEI,SBTNEI,SMAJI,NCAI,SNCAI,FDJR:NCAI}}
+function rows(s,iter=false){let R=iter?[["Objectif périodique espéré itéré","SOPEI",s.SOPEI],["Capital final espéré itéré","SCAFI",s.SCAFI],["Gain total net espéré itéré","SGTNEI",s.SGTNEI],["Bénéfice total net espéré itéré","SBTNEI",s.SBTNEI],["Mise à jouer itérée","SMAJI",s.SMAJI],["Nouveau capital initial","NCAI",s.NCAI],["Solde sur nouveau capital initial","SNCAI",s.SNCAI]]:[["Capital initial","SCAI",s.SCAI],["Côte à jouer","SCAJ",s.SCAJ],["Mise à jouer","SMAJ",s.SMAJ],["Solde sur CAI","SSCAI",s.SSCAI],["Gain total net espéré","SGTNE",s.SGTNE],["Bénéfice total net espéré","SBTNE",s.SBTNE],["Objectif périodique espéré","SOPE",s.SOPE],["Capital final espéré","SCAF",s.SCAF],["Montant perdu sur capital initial","SMPSCAI",s.SMPSCAI]];return R.map(r=>`<div class="simrow"><div class="nm">${r[0]}</div>${ab(r[1])}<div class="val">${fmt(r[2])}</div></div>`).join("")}
+function renderScenarios(o){if(!o)return;let x=v(),a=o.a,b=o.b,c=o.c,d=o.d,C=x.C,A=[["MATCH ANNULÉ ET NUL",.5*(x.c3+x.c4),.5*(c+d),C-x.c3-x.c4],["MATCH ANNULÉ ET VICTOIRE DE 1",x.c3,c,C-a*x.c1-x.c3],["MATCH ANNULÉ ET VICTOIRE DE 2",x.c4,d,C-b*x.c2-x.c4]].map(z=>({title:z[0],...scenario(C,z[1],z[2],z[3])}));
+$("sim").innerHTML=A.map(s=>`<article class="sim"><div class="simhead">${s.title}</div><div class="simbody">${rows(s)}</div></article>`).join("");
+$("iter").innerHTML=A.map(s=>`<article class="sim"><div class="simhead">ITÉRATION — ${s.title.replace("MATCH ANNULÉ ET ","")}</div><div class="simbody">${rows(s,true)}</div></article>`).join("");
+$("fund").innerHTML=A.map(s=>`<div class="fundbox"><span>Fond de jeu recommandé</span><strong>${ab("FDJR")} = ${fmt(s.FDJR)}</strong></div>`).join("")}
+function fastMax(x){
+ const {C,c1,c2,c3,c4}=x,mn=Math.ceil(Math.max(c1,c2,c3,c4)+Math.min(c1,c2,c3,c4)-1e-10),m=Math.min(1.38,Math.min(c1,c2,c3,c4));
+ let best=-Infinity,L=[];
+ for(let b=mn;b<=Math.floor(C-3*mn);b++){
+  let c=Math.max(mn,Math.ceil((C-c2*b-1e-10)/c3));
+  let d=Math.max(mn,Math.ceil((C-c2*b-1e-10)/c4));
+  let a=Math.floor(C-b-c-d);
+  if(a<mn)continue;
+  if(c1*a-c3*c<m-1e-9||c1*a-c4*d<m-1e-9)continue;
+  let T=c1*a+c3*c+c4*d;
+  if(T>best+1e-9){best=T;L=[{a,b,c,d,t:T,r2:c1*a+c3*c+c4*d,r4:c2*b+c4*d}]}
+  else if(Math.abs(T-best)<1e-9)L.push({a,b,c,d,t:T,r2:c1*a+c3*c+c4*d,r4:c2*b+c4*d});
+ }
+ return{best,L,mn};
+}
+function exactSmall(x){
+ const {C,c1,c2,c3,c4,p}=x,mn=Math.ceil(Math.max(c1,c2,c3,c4)+Math.min(c1,c2,c3,c4)-1e-10),minC=Math.min(c1,c2,c3,c4),target=C*(1+p);let n=0;
+ for(let a=mn;a<=C-3*mn;a++)for(let b=mn;b<=C-a-2*mn;b++)for(let c=mn;c<=C-a-b-mn;c++){let dmax=C-a-b-c;for(let d=mn;d<=dmax;d++){if(c1*a+c3*c+c4*d<target-1e-9)continue;if(c2*b+c3*c<C-1e-9||c2*b+c4*d<C-1e-9)continue;if(c1*a-c3*c<minC-1e-9||c1*a-c4*d<minC-1e-9)continue;n++}}return n}
+async function solve(){
+ const x=v();$("target").textContent=fmt(x.C*(1+x.p));renderRules();
+ if(!(x.c1>x.c3&&x.c3>x.c4&&x.c4>x.c2)){ $("status").innerHTML='<span style="color:var(--red)">Ordre requis : C1 &gt; C3 &gt; C4 &gt; C2.</span>';return}
+ const M=fastMax(x);$("tmax").textContent=fmt(M.best);$("pmax").textContent=fmt((M.best/x.C-1)*100)+" %";$("lc").textContent=M.L.length;
+ $("limits").innerHTML=M.L.map(s=>`<tr><td class="var">${s.a}</td><td class="var">${s.b}</td><td class="var">${s.c}</td><td class="var">${s.d}</td><td>${fmt(s.r4)}</td><td>${fmt(s.t)}</td><td>${fmt(s.r2)}</td><td>${fmt(x.c1*s.a+s.c+s.d)}</td></tr>`).join("");
+ renderScenarios(M.L[0]);
+ // Exact enumeration is deliberately restricted to modest capitals. Large capitals use the O(C) optimized maximum engine.
+ if(x.C<=220){let n=exactSmall(x);$("count").textContent=n.toLocaleString("fr-FR");$("status").innerHTML=`<span style="color:var(--green)">Calcul exact terminé : ${n.toLocaleString("fr-FR")} solutions à +${fmt(x.p*100)}%.</span>`}
+ else{$("count").textContent="—";$("status").innerHTML=`<span class="warn">Mode gros capital sécurisé : Pmax, Tmax et les solutions limites sont calculés sans balayage massif. Le dénombrement exhaustif est désactivé au-delà de 220 pour préserver la fluidité du téléphone.</span>`}
+}
+$("solve").onclick=solve;$("reset").onclick=()=>{["capital","pct","c1","c2","c3","c4"].forEach((id,i)=>$(id).value=[100,5,2.87,1.38,1.91,1.79][i]);solve()};solve();
+</script>
+<script>if("serviceWorker"in navigator)navigator.serviceWorker.register("./sw.js").catch(()=>{});</script>
+</body></html>
