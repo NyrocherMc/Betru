@@ -1,0 +1,30 @@
+{
+  "app":"Betru",
+  "version":"V11.2",
+  "model":"NUL_X | VICTOIRE_12 | REMBOURSESINUL_1 | REMBOURSESINUL_2",
+  "coefficients":{"C1":2.87,"C2":1.38,"C3":1.91,"C4":1.79},
+  "defaults":{"capital":100,"percentage":5},
+  "order":"C1 > C3 > C4 > C2",
+  "rules":{
+    "R1":"((C2*b)+(C3*c)) >= (CAI*(1+p))",
+    "R2":"((C1*a)+(C3*c)+(C4*d)) >= CAI",
+    "R3":"(C1*a) <= (c+d)",
+    "R4":"((C2*b)+(C4*d)) >= CAI",
+    "R5":"(((C2*b)+(C3*c))-CAI) >= (CAI-((C3*c)+(C4*d)))",
+    "R6":"(((C2*b)+(C4*d))-CAI) >= (CAI-((C3*c)+(C4*d)))",
+    "R7":"(a,b,c,d) >= max(Ci)+min(Ci)",
+    "R8":"(a+b+c+d) <= CAI"
+  },
+  "limitResults":{
+    "victoireFavoris":"(C2*b)+(C4*d)",
+    "victoireTocard":"(C2*b)+(C3*c)",
+    "nul":"(C1*a)+(C3*c)+(C4*d)",
+    "annule":"(C1*a)+(1*c)+(1*d)"
+  },
+  "simulation":{
+    "nul":{"COTE_DEFICITAIRE":"0.50*(C3+C4)","SMAJ":"0.50*(c+d)"},
+    "victoire1":{"COTE_DEFICITAIRE":"C3","SMAJ":"c"},
+    "victoire2":{"COTE_DEFICITAIRE":"C4","SMAJ":"d"},
+    "common":["SCAI=CAI","SSCAI=SCAI-SMAJ","SGTNE=SCAJ*SMAJ","SBTNE=SGTNE-SMAJ","SOPE=SBTNE","SCAF=SSCAI+SGTNE","SOPEI=2*SOPE","SCAFI=SMPSCAI+SGTNE+SOPEI","SGTNEI=SCAFI","SBTNEI=SOPEI","SMAJI=SCAFI-SOPEI","NCAI=SCAF+SMAJI","SNCAI=NCAI-SMAJI","FDJR=NCAI"]
+  }
+}
