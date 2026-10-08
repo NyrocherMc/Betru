@@ -1,0 +1,71 @@
+{
+  "app": "Betru",
+  "version": "V14.1",
+  "source": "BETRU_GUIDE_modif_002.docx",
+  "model": "NUL_X | VICTOIRE_12 | REMBOURSESINUL_1 | REMBOURSESINUL_2",
+  "defaults": {
+    "capital": 100,
+    "percentage": 5
+  },
+  "coefficients": {
+    "C1": 2.87,
+    "C2": 1.38,
+    "C3": 1.91,
+    "C4": 1.79
+  },
+  "rules": {
+    "R1": "C1 > C3 > C4 > C2",
+    "R2": "(C1*a + C3*c + C4*d) >= CAI*(1+pmax)",
+    "R3": "(C2*b + C3*c) >= CAI",
+    "R4": "(C2*b + C4*d) >= CAI",
+    "R5": "(C1*a - C3*c) >= min(Ci)",
+    "R6": "(C1*a - C4*d) >= min(Ci)",
+    "R7": "(C3*c - C4*d) >= min(Ci)",
+    "R8": "(C3*c) > (C4*d)",
+    "R9": "a,b,c,d >= max(Ci)+min(Ci)",
+    "R10": "a+b+c+d <= CAI"
+  },
+  "leverage": {
+    "Pmax": "(Tmax/CAI)-1",
+    "Tmax": "max(C1*a+C3*c+C4*d)"
+  },
+  "performance": {
+    "limitEngine": "O(CAI²)",
+    "exactCountMaxCapital": 180,
+    "largeCapitalPolicy": "Tmax/Pmax/limit solutions only; exhaustive count disabled"
+  },
+  "sime": {
+    "nul": {
+      "COTE_DEFICITAIRE": "0.50*(C3+C4)",
+      "SMAJ": "0.50*(c+d)",
+      "SMPSCAI": "SCAI-(1*C3)-(1*C4)"
+    },
+    "victoire1": {
+      "COTE_DEFICITAIRE": "C3",
+      "SMAJ": "c",
+      "SMPSCAI": "SCAI-(a*C1)-(1*C3)"
+    },
+    "victoire2": {
+      "COTE_DEFICITAIRE": "C4",
+      "SMAJ": "d",
+      "SMPSCAI": "SCAI-(b*C2)-(1*C4)"
+    },
+    "common": [
+      "SCAI=CAI",
+      "SSCAI=CAI-SMAJ",
+      "SGTNE=SCAJ*SMAJ",
+      "SBTNE=SGTNE-SMAJ",
+      "SOPE=SBTNE",
+      "SCAF=SSCAI+SGTNE",
+      "SOPEI=2*SOPE",
+      "SCAFI=SMPSCAI+SGTNE+SOPEI",
+      "SGTNEI=SCAFI",
+      "SBTNEI=SOPEI",
+      "SMAJI=SCAFI-SOPEI",
+      "NCAI=SCAF+SMAJI",
+      "SNCAI=NCAI-SMAJI",
+      "FDJR=NCAI"
+    ]
+  },
+  "correction": "Correction du moteur Tmax : c peut devoir être augmenté pour satisfaire R7/R8; le moteur ne rejette plus cette possibilité."
+}
